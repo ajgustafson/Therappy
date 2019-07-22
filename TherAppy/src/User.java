@@ -2,7 +2,7 @@ import java.util.Date;
 
 public class User {
 
-  private int userID;
+  // private int userID;
   private String lastName;
   private String firstName;
   private String email;
@@ -14,12 +14,13 @@ public class User {
   private char prefGender;
   private int maxCost;
   private String prefQualification;
-  private boolean needsInsurance;
+  private int needsInsurance;
+  private int prefStyle;
 
-  public User(int ID, String lastName, String firstName, String email, char gender, Date dob,
+  public User(String lastName, String firstName, String email, char gender, Date dob,
               String zipCode, String insurance, int maxDistance, char prefGender, int maxCost,
-              String prefQualification, boolean needsInsurance) {
-    this.userID = ID;
+              String prefQualification, int needsInsurance, int prefStyle) {
+    // this.userID = ID;
     this.lastName = lastName;
     this.firstName = firstName;
     this.email = email;
@@ -32,12 +33,68 @@ public class User {
     this.maxCost = maxCost;
     this.prefQualification = prefQualification;
     this.needsInsurance = needsInsurance;
+    this.prefStyle = prefStyle;
   }
+  /*
+  public int getUserID() {
+    return userID;
+  }
+  */
+
+  public String getLastName() {
+    return lastName;
+  }
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public char getGender() {
+    return gender;
+  }
+
+  public Date getDob() {
+    return dob;
+  }
+
+  public String getZipCode() {
+    return zipCode;
+  }
+
+  public String getInsurance() {
+    return insurance;
+  }
+
+  public int getMaxDistance() {
+    return maxDistance;
+  }
+
+  public char getPrefGender() {
+    return prefGender;
+  }
+
+  public int getMaxCost() {
+    return maxCost;
+  }
+
+  public String getPrefQualification() {
+    return prefQualification;
+  }
+
+  public int getNeedsInsurance() {
+    return needsInsurance;
+  }
+
+  public int getPrefStyle() { return prefStyle; }
 
   @Override
   public String toString() {
     return "User {\n"
-            + "ID: " + this.userID + "\n"
+            // + "ID: " + this.userID + "\n"
             + "Name: " + this.firstName + " " + this.lastName + "\n"
             + "Email: " + this.email + "\n"
             + "Gender: " + this.gender + "\n"
