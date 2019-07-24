@@ -4,7 +4,6 @@ USE therappy;
 
 DROP TABLE IF EXISTS user_exhibits_malady;
 DROP TABLE IF EXISTS therapist_accepts_insurance;
-DROP TABLE IF EXISTS therapist_has_qualification;
 DROP TABLE IF EXISTS therapist_treats_malady;
 DROP TABLE IF EXISTS user_rates_therapist;
 DROP TABLE IF EXISTS user_matches_therapist;
@@ -14,6 +13,13 @@ DROP TABLE IF EXISTS qualification;
 DROP TABLE IF EXISTS malady;
 DROP TABLE IF EXISTS style;
 DROP TABLE IF EXISTS insurance;
+DROP TABLE IF EXISTS question;
+
+
+CREATE TABLE question (
+	question_id INT PRIMARY KEY,
+    content VARCHAR(200) NOT NULL UNIQUE
+);
 
 CREATE TABLE insurance (
 	insurance_id INT PRIMARY KEY,
@@ -93,14 +99,6 @@ CREATE TABLE therapist_treats_malady (
     PRIMARY KEY (therapist_id, malady_id)
 );
 
-CREATE TABLE therapist_has_qualification (
-	therapist_id INT NOT NULL,
-    CONSTRAINT hasqual_fk_therapist FOREIGN KEY (therapist_id) references therapist (therapist_id),
-    qualification_id INT NOT NULL,
-    CONSTRAINT hasqual_fk_qualification FOREIGN KEY (qualification_id) references qualification (qualification_id),
-    PRIMARY KEY (therapist_id, qualification_id)
-);
-
 CREATE TABLE therapist_accepts_insurance (
 	therapist_id INT NOT NULL,
     CONSTRAINT accepts_fk_therapist FOREIGN KEY (therapist_id) references therapist (therapist_id),
@@ -116,3 +114,8 @@ CREATE TABLE user_exhibits_malady (
     CONSTRAINT exibits_fk_malady FOREIGN KEY (malady_id) references malady (malady_id),
     PRIMARY KEY (user_id, malady_id)
 );
+
+
+select 
+	count(*) 
+from user;
