@@ -1,5 +1,5 @@
-DROP DATABASE IF EXISTS therappy;
-CREATE DATABASE IF NOT EXISTS therappy;
+-- DROP DATABASE IF EXISTS therappy;
+-- CREATE DATABASE IF NOT EXISTS therappy;
 USE therappy;
 
 DROP TABLE IF EXISTS user_exhibits_malady;
@@ -36,27 +36,35 @@ CREATE TABLE qualification (
 );
 
 CREATE TABLE user (
-	user_id INT PRIMARY KEY, 
+	user_id INT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
     username VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     pwd VARCHAR(20) NOT NULL,
-    gender ENUM('F', 'M', 'NB'),
+    gender ENUM('Female', 'Male'),
     zipcode CHAR(5) NOT NULL,
     dob DATE,
     insurance_id INT,
-	CONSTRAINT user_fk_insurance FOREIGN KEY (insurance_id) references insurance (insurance_id)
+    style_pref INT,
+	CONSTRAINT user_fk_insurance FOREIGN KEY (insurance_id) references insurance (insurance_id),
+    CONSTRAINT pref_fk_style FOREIGN KEY (style_pref) references style (style_id)
 );
 
 CREATE TABLE therapist (
 	therapist_id INT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    gender ENUM('F', 'M', 'NB') NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    gender ENUM('Female', 'Male') NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    phone_number CHAR(12) NOT NULL,
     dob DATE NOT NULL,
     zipcode CHAR(5) NOT NULL,
-    remote TINYINT NOT NULL,
     cost_per_session INT NOT NULL,
     style_id INT NOT NULL,
-    CONSTRAINT therapist_fk_style FOREIGN KEY (style_id) references style (style_id)
+    qualification_id INT NOT NULL,
+    CONSTRAINT therapist_fk_style FOREIGN KEY (style_id) references style (style_id),
+    CONSTRAINT therapist_fk_qualification FOREIGN KEY (qualification_id) references qualification (qualification_id)
 );
 
 CREATE TABLE user_matches_therapist (
