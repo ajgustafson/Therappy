@@ -71,6 +71,10 @@ public class User {
     return insurance;
   }
 
+  public String getMalady() {
+    return malady;
+  }
+
   public int getMaxDistance() {
     return maxDistance;
   }

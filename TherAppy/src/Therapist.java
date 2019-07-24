@@ -78,7 +78,7 @@ public class Therapist {
 
   @Override
   public String toString() {
-    return "Therapist {"
+    return "Therapist {\n"
             + "ID: " + this.therapistID + "\n"
             + "Name: " + this.firstName + " " + this.lastName + "\n"
             + "Gender: " + this.gender + "\n"

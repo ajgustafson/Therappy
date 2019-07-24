@@ -20,12 +20,12 @@ public class API implements TherAppyAPI {
   public int insertUser(User user) {
     // Our SQL query
     String sql = "INSERT INTO user (userName, email, pwd, gender, zipcode, dob, insurance_id, " +
-            "gender_pref, max_distance, max_cost, qualification_pref, need_insurance, " +
+            " malady, gender_pref, max_distance, max_cost, qualification_pref, need_insurance, " +
             "style_id) VALUES " +
             "('" + user.getFirstName() + " " + user.getLastName() + "','" +
             user.getEmail() + "','" + "testPassword" + "','" +
             user.getGender() + "','" + user.getZipCode() + "','" +
-            user.getDob() + "','" + user.getInsurance() + "','" +
+            user.getDob() + "','" + user.getInsurance() + "','" + user.getMalady() + "','" +
             user.getPrefGender() + "','" + user.getMaxDistance() + "','" +
             user.getMaxCost() + "','" + user.getPrefQualification() + "','" +
             user.getNeedsInsurance() + "','" + user.getPrefStyle() + "')";
