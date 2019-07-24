@@ -10,6 +10,7 @@ public class User {
   private Date dob;
   private String zipCode;
   private String insurance;
+  private String malady;
   private int maxDistance;
   private char prefGender;
   private int maxCost;
@@ -18,8 +19,8 @@ public class User {
   private int prefStyle;
 
   public User(String lastName, String firstName, String email, char gender, Date dob,
-              String zipCode, String insurance, int maxDistance, char prefGender, int maxCost,
-              String prefQualification, int needsInsurance, int prefStyle) {
+              String zipCode, String insurance, String malady, int maxDistance, char prefGender,
+              int maxCost, String prefQualification, int needsInsurance, int prefStyle) {
     // this.userID = ID;
     this.lastName = lastName;
     this.firstName = firstName;
@@ -28,6 +29,7 @@ public class User {
     this.dob = dob;
     this.zipCode = zipCode;
     this.insurance = insurance;
+    this.malady = malady;
     this.maxDistance = maxDistance;
     this.prefGender = prefGender;
     this.maxCost = maxCost;
@@ -101,6 +103,7 @@ public class User {
             + "DOB: " + this.dob + "\n"
             + "Zip code: " + this.zipCode + "\n"
             + "Insurance: " + this.insurance + "\n"
+            + "Malady: " + this.malady + "\n"
             + "Preferred therapist distance: " + this.maxDistance + "\n"
             + "Preferred therapist gender: " + this.prefGender + "\n"
             + "Preferred therapist cost: " + this.maxCost + "\n"
