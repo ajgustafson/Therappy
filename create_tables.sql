@@ -1,5 +1,5 @@
--- DROP DATABASE IF EXISTS therappy;
--- CREATE DATABASE IF NOT EXISTS therappy;
+DROP DATABASE IF EXISTS therappy;
+CREATE DATABASE IF NOT EXISTS therappy;
 USE therappy;
 
 DROP TABLE IF EXISTS user_exhibits_malady;
@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS therapist_accepts_insurance;
 DROP TABLE IF EXISTS therapist_treats_malady;
 DROP TABLE IF EXISTS user_rates_therapist;
 DROP TABLE IF EXISTS user_matches_therapist;
+DROP TABLE IF EXISTS user_answers_questions;
 DROP TABLE IF EXISTS therapist;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS qualification;
@@ -52,9 +53,14 @@ CREATE TABLE user (
     zipcode CHAR(5) NOT NULL,
     dob DATE,
     insurance_id INT,
+    CONSTRAINT user_fk_insurance FOREIGN KEY (insurance_id) references insurance (insurance_id),
+    max_distance INT NOT NULL,
+    gender_pref ENUM('Female', 'Male'),
+    qualification_pref INT,
+    CONSTRAINT user_fk_qualification FOREIGN KEY (qualification_pref) references qualification (qualification_id),
+    needs_insurance boolean NOT NULL,
     style_pref INT,
-	CONSTRAINT user_fk_insurance FOREIGN KEY (insurance_id) references insurance (insurance_id),
-    CONSTRAINT pref_fk_style FOREIGN KEY (style_pref) references style (style_id)
+    CONSTRAINT user_fk_style FOREIGN KEY (style_pref) references style (style_id)
 );
 
 CREATE TABLE therapist (
@@ -68,8 +74,8 @@ CREATE TABLE therapist (
     zipcode CHAR(5) NOT NULL,
     cost_per_session INT NOT NULL,
     style_id INT NOT NULL,
-    qualification_id INT NOT NULL,
     CONSTRAINT therapist_fk_style FOREIGN KEY (style_id) references style (style_id),
+    qualification_id INT NOT NULL,
     CONSTRAINT therapist_fk_qualification FOREIGN KEY (qualification_id) references qualification (qualification_id)
 );
 
@@ -115,6 +121,13 @@ CREATE TABLE user_exhibits_malady (
     PRIMARY KEY (user_id, malady_id)
 );
 
+CREATE TABLE user_answers_questions(
+	user_id INT NOT NULL,
+    CONSTRAINT answer_fk_user FOREIGN KEY (user_id) references user (user_id),
+    question_id INT NOT NULL,
+    CONSTRAINT answer_fk_question FOREIGN KEY (question_id) references question (question_id),
+    PRIMARY KEY (user_id, question_id)
+);
 
 select 
 	count(*) 
