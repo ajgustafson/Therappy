@@ -132,3 +132,9 @@ CREATE TABLE user_answers_questions(
 select 
 	count(*) 
 from user;
+
+select count(*)
+from insurance;
+
+select *
+from style;

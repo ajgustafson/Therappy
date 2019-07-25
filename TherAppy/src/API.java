@@ -19,13 +19,14 @@ public class API implements TherAppyAPI {
   @Override
   public int insertUser(User user) {
     // Our SQL query
-    String sql = "INSERT INTO user (userName, email, pwd, gender, zipcode, dob, insurance_id, " +
-            " malady, gender_pref, max_distance, max_cost, qualification_pref, need_insurance, " +
+    String sql = "INSERT INTO user (first_name, last_name, username, email, pwd, gender, " +
+            "zipcode, dob, insurance_id, " +
+            "max_distance, gender_pref, max_cost, qualification_pref, needs_insurance, " +
             "style_id) VALUES " +
-            "('" + user.getFirstName() + " " + user.getLastName() + "','" +
-            user.getEmail() + "','" + "testPassword" + "','" +
+            "('" + user.getFirstName() + "','" + user.getLastName() + "','" +
+            user.getUsername() + "','" + user.getEmail() + "','" + user.getPassword() + "','" +
             user.getGender() + "','" + user.getZipCode() + "','" +
-            user.getDob() + "','" + user.getInsurance() + "','" + user.getMalady() + "','" +
+            user.getDob() + "','" + user.getInsurance() + "','" +
             user.getPrefGender() + "','" + user.getMaxDistance() + "','" +
             user.getMaxCost() + "','" + user.getPrefQualification() + "','" +
             user.getNeedsInsurance() + "','" + user.getPrefStyle() + "')";

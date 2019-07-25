@@ -1,6 +1,4 @@
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Class to represent a therapist for TherAppy application.
@@ -12,21 +10,23 @@ public class Therapist {
    */
   private int therapistID;
   /**
-   * Last name of this therapist.
-   */
-  private String lastName;
-  /**
    * First name of this therapist.
    */
   private String firstName;
   /**
-   * Gender of this therapist. F: female, M: male, N: non-binary.
+   * Last name of this therapist.
    */
-  private char gender;    // F, M, N
+  private String lastName;
   /**
    * Date of birth for this therapist.
    */
   private Date dob;
+  /**
+   * Gender of this therapist. F: female, M: male, N: non-binary.
+   */
+  private String gender;    // F, M, N
+  private String email;
+  private String phoneNumber;
   /**
    * Zip code for the location of this therapist's practice.
    */
@@ -34,7 +34,7 @@ public class Therapist {
   /**
    * Cost-per-session that this therapist charges.
    */
-  private int costPerSession;
+  private float costPerSession;
   /**
    * Therapy style of this therapist.
    */
@@ -43,10 +43,6 @@ public class Therapist {
    * Degree qualification this therapist holds.
    */
   private String qualification;
-  /**
-   * List of insurance providers accepted by this therapist.
-   */
-  private List<String> insurance = new ArrayList<>(); //???????
 
   /**
    * Construct therapist object with given attributes.
@@ -60,20 +56,18 @@ public class Therapist {
    * @param cost          cost per session charged
    * @param style         therapy style
    * @param qualification highest degree held
-   * @param insurance     list of insurance providers accepted
    */
-  public Therapist(int ID, String lastName, String firstName, char gender, Date dob, String zipCode,
-                   int cost, String style, String qualification, List<String> insurance) {
+  public Therapist(int ID, String lastName, String firstName, String gender, Date dob, String zipCode,
+                   int cost, String style, String qualification) {
     this.therapistID = ID;
-    this.lastName = lastName;
     this.firstName = firstName;
-    this.gender = gender;
+    this.lastName = lastName;
     this.dob = dob;
+    this.gender = gender;
     this.zipCode = zipCode;
     this.costPerSession = cost;
     this.style = style;
     this.qualification = qualification;
-    this.insurance = insurance;
   }
 
   @Override

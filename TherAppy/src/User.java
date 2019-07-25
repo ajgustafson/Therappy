@@ -3,33 +3,35 @@ import java.util.Date;
 public class User {
 
   // private int userID;
-  private String lastName;
   private String firstName;
-  private String email;
-  private char gender;  // 'F', 'M', 'N'
+  private String lastName;
+  private String username;
+  private String password;
   private Date dob;
+  private String gender;  // 'Female', 'Male'
+  private String email;
   private String zipCode;
   private String insurance;
-  private String malady;
   private int maxDistance;
-  private char prefGender;
+  private String prefGender;
   private int maxCost;
   private String prefQualification;
   private int needsInsurance;
   private int prefStyle;
 
-  public User(String lastName, String firstName, String email, char gender, Date dob,
-              String zipCode, String insurance, String malady, int maxDistance, char prefGender,
+  public User(String lastName, String firstName, String username, String password, String email, String gender, Date dob,
+              String zipCode, String insurance, int maxDistance, String prefGender,
               int maxCost, String prefQualification, int needsInsurance, int prefStyle) {
     // this.userID = ID;
     this.lastName = lastName;
     this.firstName = firstName;
+    this.username = username;
+    this.password = password;
     this.email = email;
     this.gender = gender;
     this.dob = dob;
     this.zipCode = zipCode;
     this.insurance = insurance;
-    this.malady = malady;
     this.maxDistance = maxDistance;
     this.prefGender = prefGender;
     this.maxCost = maxCost;
@@ -51,11 +53,15 @@ public class User {
     return firstName;
   }
 
+  public String getUsername() { return username; }
+
+  public String getPassword() { return password; }
+
   public String getEmail() {
     return email;
   }
 
-  public char getGender() {
+  public String getGender() {
     return gender;
   }
 
@@ -71,15 +77,11 @@ public class User {
     return insurance;
   }
 
-  public String getMalady() {
-    return malady;
-  }
-
   public int getMaxDistance() {
     return maxDistance;
   }
 
-  public char getPrefGender() {
+  public String getPrefGender() {
     return prefGender;
   }
 
@@ -95,7 +97,9 @@ public class User {
     return needsInsurance;
   }
 
-  public int getPrefStyle() { return prefStyle; }
+  public int getPrefStyle() {
+    return prefStyle;
+  }
 
   @Override
   public String toString() {
@@ -107,7 +111,6 @@ public class User {
             + "DOB: " + this.dob + "\n"
             + "Zip code: " + this.zipCode + "\n"
             + "Insurance: " + this.insurance + "\n"
-            + "Malady: " + this.malady + "\n"
             + "Preferred therapist distance: " + this.maxDistance + "\n"
             + "Preferred therapist gender: " + this.prefGender + "\n"
             + "Preferred therapist cost: " + this.maxCost + "\n"
