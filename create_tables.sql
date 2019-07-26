@@ -49,13 +49,13 @@ CREATE TABLE user (
     username VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     pwd VARCHAR(20) NOT NULL,
-    gender ENUM('Female', 'Male'),
+    gender ENUM('F', 'M'),
     zipcode CHAR(5) NOT NULL,
     dob DATE,
     insurance_id INT,
     CONSTRAINT user_fk_insurance FOREIGN KEY (insurance_id) references insurance (insurance_id),
     max_distance INT NOT NULL,
-    gender_pref ENUM('Female', 'Male'),
+    gender_pref ENUM('F', 'M'),
     qualification_pref INT,
     CONSTRAINT user_fk_qualification FOREIGN KEY (qualification_pref) references qualification (qualification_id),
     needs_insurance boolean NOT NULL,
@@ -67,7 +67,7 @@ CREATE TABLE therapist (
 	therapist_id INT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
-    gender ENUM('Female', 'Male') NOT NULL,
+    gender ENUM('F', 'M') NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     phone_number CHAR(12) NOT NULL,
     dob DATE NOT NULL,
@@ -129,12 +129,3 @@ CREATE TABLE user_answers_questions(
     PRIMARY KEY (user_id, question_id)
 );
 
-select 
-	count(*) 
-from user;
-
-select count(*)
-from insurance;
-
-select *
-from style;
