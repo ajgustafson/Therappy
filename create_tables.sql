@@ -132,7 +132,6 @@ CREATE TABLE user_answers_questions(
 
 delimiter //
 -- This procedure adds a new user to the databse AFTER they have completed the questionaire
-
 create procedure addUser
 (
 	in first_name_param VARCHAR(50),
@@ -170,12 +169,33 @@ delimiter //
 
 create procedure findSimilarUsers
 (
-	in param_name int  -- params go here, separated by commas
+	in user_id_param int  -- params go here, separated by commas
 )
 
 begin
 
-    declare var_name int; -- variable declarations, ending each lline with semicolons
+    declare style_pref_var int; -- variable declarations, ending each lline with semicolons
+    declare max_distance_pref_var int;
+    declare gender_pref_var ENUM('F', 'M');
+    declare qualification_pref_var int;
+    declare zipcode_var varchar(5);
+    
+    -- store in a view?
+    select
+		style_pref,
+        max_distance,
+        gender_pref,
+        qualification_pref,
+        zip_code
+	into
+		style_pref_var,
+		max_distance_pref_var,
+		gender_pref_var,
+		qualification_pref_var,
+		zipcode_var
+	from user
+    where user_id = user_id_param;
+    
     
 end //
 delimiter ;
@@ -186,12 +206,32 @@ delimiter //
 
 create procedure findMatchingTherapists
 (
-	in param_name int  -- params go here, separated by commas
+	in user_id_param int  -- params go here, separated by commas
 )
 
 begin
 
-    declare var_name int; -- variable declarations, ending each lline with semicolons
+    declare style_pref_var int; -- variable declarations, ending each lline with semicolons
+    declare max_distance_pref_var int;
+    declare gender_pref_var ENUM('F', 'M');
+    declare qualification_pref_var int;
+    declare zipcode_var varchar(5);
+    
+    -- store in a view?
+    select
+		style_pref,
+        max_distance,
+        gender_pref,
+        qualification_pref,
+        zip_code
+	into
+		style_pref_var,
+		max_distance_pref_var,
+		gender_pref_var,
+		qualification_pref_var,
+		zipcode_var
+	from user
+    where user_id = user_id_param;
     
 end //
 delimiter ;
@@ -202,7 +242,7 @@ delimiter //
 
 create procedure filterMatchingTherapists 
 (
-	in param_name int  -- params go here, separated by commas
+	in user_id_param int  -- params go here, separated by commas
 )
 
 begin
