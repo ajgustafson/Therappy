@@ -1,4 +1,5 @@
 import java.util.Date;
+import java.util.List;
 
 public class User {
 
@@ -12,6 +13,7 @@ public class User {
   private String email;
   private String zipCode;
   private String insurance;
+  private List<String> maladies;
   private int maxDistance;
   private String prefGender;
   private int maxCost;
@@ -20,7 +22,7 @@ public class User {
   private int prefStyle;
 
   public User(String lastName, String firstName, String username, String password, String email, String gender, Date dob,
-              String zipCode, String insurance, int maxDistance, String prefGender,
+              String zipCode, String insurance, List<String> maladies, int maxDistance, String prefGender,
               int maxCost, String prefQualification, int needsInsurance, int prefStyle) {
     // this.userID = ID;
     this.lastName = lastName;
@@ -32,6 +34,7 @@ public class User {
     this.dob = dob;
     this.zipCode = zipCode;
     this.insurance = insurance;
+    this.maladies = maladies;
     this.maxDistance = maxDistance;
     this.prefGender = prefGender;
     this.maxCost = maxCost;
