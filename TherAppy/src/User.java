@@ -80,6 +80,10 @@ public class User {
     return insurance;
   }
 
+  public List<String> getMaladies() {
+    return maladies;
+  }
+
   public int getMaxDistance() {
     return maxDistance;
   }
@@ -114,6 +118,7 @@ public class User {
             + "DOB: " + this.dob + "\n"
             + "Zip code: " + this.zipCode + "\n"
             + "Insurance: " + this.insurance + "\n"
+            + "Maladies: " + this.maladies.toString() + "\n"
             + "Preferred therapist distance: " + this.maxDistance + "\n"
             + "Preferred therapist gender: " + this.prefGender + "\n"
             + "Preferred therapist cost: " + this.maxCost + "\n"
