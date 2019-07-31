@@ -55,6 +55,7 @@ CREATE TABLE user (
     insurance_id INT,
     CONSTRAINT user_fk_insurance FOREIGN KEY (insurance_id) references insurance (insurance_id),
     max_distance INT NOT NULL,
+    max_cost INT,
     gender_pref ENUM('F', 'M'),
     qualification_pref INT,
     CONSTRAINT user_fk_qualification FOREIGN KEY (qualification_pref) references qualification (qualification_id),
