@@ -1,4 +1,4 @@
-user Therappy;
+use Therappy;
 
 delimiter //
 -- This procedure adds a new user to the databse AFTER they have completed the questionaire
