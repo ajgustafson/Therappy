@@ -24,7 +24,7 @@ CREATE TABLE choice (
 );
 
 CREATE TABLE insurance (
-	insurance_id INT PRIMARY KEY,
+	insurance_id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL UNIQUE
 );
 
@@ -44,7 +44,7 @@ CREATE TABLE qualification (
 );
 
 CREATE TABLE user (
-	user_id INT PRIMARY KEY,
+	user_id INT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     username VARCHAR(50) NOT NULL,
