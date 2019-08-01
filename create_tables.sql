@@ -7,14 +7,14 @@ DROP TABLE IF EXISTS therapist_accepts_insurance;
 DROP TABLE IF EXISTS therapist_treats_malady;
 DROP TABLE IF EXISTS user_rates_therapist;
 DROP TABLE IF EXISTS user_matches_therapist;
-DROP TABLE IF EXISTS user_answers_questions;
+DROP TABLE IF EXISTS user_makes_choices;
 DROP TABLE IF EXISTS therapist;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS qualification;
 DROP TABLE IF EXISTS malady;
 DROP TABLE IF EXISTS style;
 DROP TABLE IF EXISTS insurance;
-DROP TABLE IF EXISTS question;
+DROP TABLE IF EXISTS choice;
 
 
 CREATE TABLE choice (
@@ -95,7 +95,7 @@ CREATE TABLE user_rates_therapist (
     CONSTRAINT rates_fk_user FOREIGN KEY (user_id) references user (user_id),
     therapist_id INT NOT NULL,
     CONSTRAINT rates_fk_therapist FOREIGN KEY (therapist_id) references therapist (therapist_id),
-    rating INT NOT NULL,
+    rating INT NOT NULL
     
 );
 
@@ -119,7 +119,7 @@ CREATE TABLE user_exhibits_malady (
 	user_id INT NOT NULL,
     CONSTRAINT exhibits_fk_user FOREIGN KEY (user_id) references user (user_id),
     malady_id INT NOT NULL,
-    CONSTRAINT exibits_fk_malady FOREIGN KEY (malady_id) references malady (malady_id),
+    CONSTRAINT exibits_fk_malady FOREIGN KEY (malady_id) references malady (malady_id)
    
 );
 
@@ -127,6 +127,6 @@ CREATE TABLE user_makes_choices(
 	user_id INT NOT NULL,
     CONSTRAINT answer_fk_user FOREIGN KEY (user_id) references user (user_id),
     choice_id INT NOT NULL,
-    CONSTRAINT answer_fk_question FOREIGN KEY (question_id) references question (question_id),
+    CONSTRAINT answer_fk_choice FOREIGN KEY (choice_id) references choice(choice_id)
     
 );

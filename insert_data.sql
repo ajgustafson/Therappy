@@ -22,18 +22,18 @@ SET FOREIGN_KEY_CHECKS = 1;
 INSERT INTO insurance VALUES
     ('Blue Cross Blue Shield'),
     ('Tufts'),
-    (20002,'Cigna'),
-    (20003,'Aetna'),
-    (20004,'United'),
-    (20005,'Medicaid'),
-    (20006,'Medicare'),
-    (20007,'Wellpoint'),
-    (20008,'Kaiser'),
-    (20009,'Humana'),
-    (20010,'Highmark'),
-    (20011,'Fallon'),
-    (20012,'Wellcare'),
-    (20013,'Anthem Health');
+    ('Cigna'),
+    ('Aetna'),
+    ('United'),
+    ('Medicaid'),
+    ('Medicare'),
+    ('Wellpoint'),
+    ('Kaiser'),
+    ('Humana'),
+    ('Highmark'),
+    ('Fallon'),
+    ('Wellcare'),
+    ('Anthem Health');
     
 INSERT INTO malady VALUES
     (5001,'PTSD'),
@@ -59,22 +59,17 @@ INSERT INTO qualification VALUES
     (30001,'PsyD'),
     (30002,'MA');
     
-INSERT INTO choices VALUES
+INSERT INTO choice VALUES
     (40000,'I have a goal', 1),
     (40001,'I am open to see what happens', -1),
-    (40002,'I am action-oriented'),
-    (40003,'I like to talk about my problems'),
-    (40004,'I like structure'),
-    (40005,'I like fluidity'),
-    (40006,'I am willing to do work outside of sessions'),
-    (40007,'I want all my work to be done with my therapist'),
-    (40008,'I like to be asked questions'),
-    (40009,'I prefer to talk about what is on my mind'),
-    (40010,'My preferred distance is'),
-    (40011,'My preferred therapist qualification is'),
-    (40012,'My preferred therapist gender is'),
-    (40013,'My preferred cost per session is'),
-    (40014,'I want my therapist to accept my insurance');
+    (40002,'I am action-oriented',1),
+    (40003,'I like to talk about my problems',-1),
+    (40004,'I like structure',1),
+    (40005,'I like fluidity',-1),
+    (40006,'I am willing to do work outside of sessions',1),
+    (40007,'I want all my work to be done with my therapist',-1),
+    (40008,'I like to be asked questions',1),
+    (40009,'I prefer to talk about what is on my mind',-1);
     
 INSERT INTO style VALUES
     (10000,'behavoiral'),
