@@ -59,9 +59,9 @@ INSERT INTO qualification VALUES
     (30001,'PsyD'),
     (30002,'MA');
     
-INSERT INTO question VALUES
-    (40000,'I have a goal'),
-    (40001,'I am open to see what happens'),
+INSERT INTO choices VALUES
+    (40000,'I have a goal', 1),
+    (40001,'I am open to see what happens', -1),
     (40002,'I am action-oriented'),
     (40003,'I like to talk about my problems'),
     (40004,'I like structure'),
