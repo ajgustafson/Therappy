@@ -17,9 +17,10 @@ DROP TABLE IF EXISTS insurance;
 DROP TABLE IF EXISTS question;
 
 
-CREATE TABLE question (
-	question_id INT PRIMARY KEY,
-    content VARCHAR(200) NOT NULL UNIQUE
+CREATE TABLE choice (
+	choice_id INT PRIMARY KEY,
+    content VARCHAR(200) NOT NULL UNIQUE,
+	value INT
 );
 
 CREATE TABLE insurance (
@@ -95,7 +96,7 @@ CREATE TABLE user_rates_therapist (
     therapist_id INT NOT NULL,
     CONSTRAINT rates_fk_therapist FOREIGN KEY (therapist_id) references therapist (therapist_id),
     rating INT NOT NULL,
-    PRIMARY KEY (user_id, therapist_id)
+    
 );
 
 CREATE TABLE therapist_treats_malady (
@@ -119,13 +120,13 @@ CREATE TABLE user_exhibits_malady (
     CONSTRAINT exhibits_fk_user FOREIGN KEY (user_id) references user (user_id),
     malady_id INT NOT NULL,
     CONSTRAINT exibits_fk_malady FOREIGN KEY (malady_id) references malady (malady_id),
-    PRIMARY KEY (user_id, malady_id)
+   
 );
 
-CREATE TABLE user_answers_questions(
+CREATE TABLE user_makes_choicess(
 	user_id INT NOT NULL,
     CONSTRAINT answer_fk_user FOREIGN KEY (user_id) references user (user_id),
-    question_id INT NOT NULL,
+    choice_id INT NOT NULL,
     CONSTRAINT answer_fk_question FOREIGN KEY (question_id) references question (question_id),
-    PRIMARY KEY (user_id, question_id)
+    
 );
