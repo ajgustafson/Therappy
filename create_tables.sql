@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS question;
 
 CREATE TABLE choice (
 	choice_id INT PRIMARY KEY,
-    content VARCHAR(200) NOT NULL UNIQUE,
+        content VARCHAR(200) NOT NULL UNIQUE,
 	value INT
 );
 
@@ -123,7 +123,7 @@ CREATE TABLE user_exhibits_malady (
    
 );
 
-CREATE TABLE user_makes_choicess(
+CREATE TABLE user_makes_choices(
 	user_id INT NOT NULL,
     CONSTRAINT answer_fk_user FOREIGN KEY (user_id) references user (user_id),
     choice_id INT NOT NULL,
