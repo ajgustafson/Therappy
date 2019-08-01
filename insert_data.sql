@@ -20,8 +20,8 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 
 INSERT INTO insurance VALUES
-    (20000,'Blue Cross Blue Shield'),
-    (20001,'Tufts'),
+    ('Blue Cross Blue Shield'),
+    ('Tufts'),
     (20002,'Cigna'),
     (20003,'Aetna'),
     (20004,'United'),
