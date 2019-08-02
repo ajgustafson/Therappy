@@ -196,7 +196,6 @@ begin
     declare style_pref_var int; -- variable declarations, ending each lline with semicolons
     declare qualification_pref_var int;
     
-    -- store in a view?
     select
 		gender,
 		gender_pref,
@@ -282,7 +281,7 @@ begin
     
     -- http://www.mysqltutorial.org/stored-procedures-loop.aspx
     
-    -- LOOP CODE, loops through all therapists in the database
+    -- LOOP CODE, loops through all therapists in the database to find match score
 		-- inside the loop
 		-- if gender_pref_var = therapist_gender
 			-- +1 to match score
@@ -290,9 +289,16 @@ begin
 			-- +1 to match score
 		-- if threapist_cost <= max_cost_var
 			-- +1 to match score
-		-- if therapist_treats_malady 
+		-- if therapist_treats_malady in user_malady selct table
+			-- +1 to match score
+		-- if user insurance in threapist_accepts_insurance for therapist_id
+			-- +1 to match score
+		-- if therapist_style = style_pref_var
+			-- +1 to match score
+        -- if avg_similar_score > 8 (?)
 			-- +1 to match score
 		-- if match_score > 5 insert therapist_id and user_id into matching table
+    
 	end if;
     
     
@@ -305,11 +311,11 @@ drop procedure if exists filterMatchingTherapists;
 -- similar users then returns a list of the top 5
 -- this link could be helpful:
 -- https://stackoverflow.com/questions/41757141/how-to-pass-a-view-name-to-a-stored-procedure-in-sql-server-2014
+
 delimiter //
 
 create procedure filterMatchingTherapists 
 (
-	-- maybe pass a view in here that is created by findMatchingTherapists?
 	in user_id_param int  -- params go here, separated by commas
 )
 
@@ -322,6 +328,8 @@ begin
     declare phone_number_var CHAR(12);
     declare zipcode_var CHAR(5);
     declare cost_per_session_var INT;
+    
+    select 
     
 end //
 delimiter ;
