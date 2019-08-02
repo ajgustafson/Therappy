@@ -35,11 +35,10 @@ begin
 end //
 delimiter ;
 
+DROP PROCEDURE IF EXISTS findSimilarUsers;
+
 -- This procedure finds all similar users to the current user
 delimiter //
-
-select *
-from user;
 
 create procedure findSimilarUsers
 (
@@ -60,7 +59,7 @@ begin
 		gender_pref,
         year(now()) - year(dob),
         style_pref,
-        qualification_pref,
+        qualification_pref
 	into
 		gender_var,
 		gender_pref_var,
@@ -70,15 +69,29 @@ begin
 	from user
     where user_id = user_id_param;
     
+    select user_id, first_name, last_name
+    from (
+	select
+		user_id, first_name, last_name,
+		gender = gender_var as gender_match,
+		gender_pref = gender_pref_var as gender_pref_match,
+		abs(CAST(age_var AS SIGNED) - CAST(year(now()) - year(dob) as signed)) <= 5 as age_match,
+		style_pref_var = style_pref as style_match,
+		qualification_pref_var = qualification_pref as qualification_match,
+		user_id in (
+			select uem.user_id from user_exhibits_malady um 
+            join user_exhibits_malady uem on (um.malady_id = uem.malady_id and um.user_id != uem.user_id)
+			where uem.user_id = user_id_param
+			) as malady_match
+	from user
+	where user_id_param != user_id
+	group by user_id
+	having gender_match + gender_pref_match + age_match + style_match + qualification_match >= 4
+    )tmp;
+    
     
 end //
 delimiter ;
-
-select *
-from user;
-
-select u.user_id, u.first_name, u.last_name, sum(if(u.gender_pref = u2.gender_pref,1,0))
-from user u join user u2 on (u.gender = u2.gender);
 
 -- IDEAS:
 -- create a temporary table/view in findMatchingTherapists of all therapists the match
@@ -147,3 +160,8 @@ begin
     declare therapist_
 end //
 delimiter ;
+
+
+-- ------------------ TESTS ------------------
+
+call findSimilarUsers(9);
