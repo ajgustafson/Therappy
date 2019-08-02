@@ -1,5 +1,6 @@
 use Therappy;
 
+
 delimiter //
 -- This procedure adds a new user to the databse AFTER they have completed the questionaire
 create procedure addUser
@@ -73,6 +74,11 @@ begin
 end //
 delimiter ;
 
+-- IDEAS:
+-- create a temporary table/view in findMatchingTherapists of all therapists the match
+-- then in filterMatchingTherapists use similar user score and write matchign users to the user_matches_therapist table?
+-- this link could be helpful:
+-- https://stackoverflow.com/questions/41757141/how-to-pass-a-view-name-to-a-stored-procedure-in-sql-server-2014
 
 -- This procedure finds all user/therapist matches
 delimiter //
@@ -106,21 +112,32 @@ begin
 	from user
     where user_id = user_id_param;
     
+    if(THERAPIST_RATING > 10) then
+		-- insert therapist_id and user_id into matching table
+	end if;
+    
+	select *
+    from user;
+    
 end //
 delimiter ;
 
 -- This procedure filters the list of user/therapist matches using 
 -- similar users then returns a list of the top 5
+-- this link could be helpful:
+-- https://stackoverflow.com/questions/41757141/how-to-pass-a-view-name-to-a-stored-procedure-in-sql-server-2014
 delimiter //
 
 create procedure filterMatchingTherapists 
 (
+	-- maybe pass a view in here that is created by findMatchingTherapists?
 	in user_id_param int  -- params go here, separated by commas
 )
 
 begin
 
-    declare var_name int; -- variable declarations, ending each lline with semicolons
-    
+    declare therapist_id_var int; -- variable declarations, ending each lline with semicolons
+    declare therapist_name_var varchar(100);
+    declare therapist_
 end //
 delimiter ;
