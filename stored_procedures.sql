@@ -242,6 +242,8 @@ delimiter ;
 -- this link could be helpful:
 -- https://stackoverflow.com/questions/41757141/how-to-pass-a-view-name-to-a-stored-procedure-in-sql-server-2014
 
+drop procedure if exists findMatchingTherapists;
+
 -- This procedure finds all user/therapist matches
 delimiter //
 
@@ -257,6 +259,8 @@ begin
     declare gender_pref_var ENUM('F', 'M');
     declare qualification_pref_var int;
     declare zipcode_var varchar(5);
+    declare match_var int;
+    declare max_cost_var int;
     
     -- store in a view?
     select
@@ -264,25 +268,38 @@ begin
         max_distance,
         gender_pref,
         qualification_pref,
-        zip_code
+        zip_code,
+        max_cost
 	into
 		style_pref_var,
 		max_distance_pref_var,
 		gender_pref_var,
 		qualification_pref_var,
-		zipcode_var
+		zipcode_var,
+        max_cost_var,
 	from user
     where user_id = user_id_param;
     
-    if(THERAPIST_RATING > 10) then
-		-- insert therapist_id and user_id into matching table
+    -- http://www.mysqltutorial.org/stored-procedures-loop.aspx
+    
+    -- LOOP CODE, loops through all therapists in the database
+		-- inside the loop
+		-- if gender_pref_var = therapist_gender
+			-- +1 to match score
+		-- if distance between zipcode_var and threapsit_zipcode <= 5
+			-- +1 to match score
+		-- if threapist_cost <= max_cost_var
+			-- +1 to match score
+		-- if therapist_treats_malady 
+			-- +1 to match score
+		-- if match_score > 5 insert therapist_id and user_id into matching table
 	end if;
     
-	select *
-    from user;
     
 end //
 delimiter ;
+
+drop procedure if exists filterMatchingTherapists;
 
 -- This procedure filters the list of user/therapist matches using 
 -- similar users then returns a list of the top 5
@@ -299,8 +316,13 @@ create procedure filterMatchingTherapists
 begin
 
     declare therapist_id_var int; -- variable declarations, ending each lline with semicolons
-    declare therapist_name_var varchar(100);
-    declare therapist_
+	declare first_name_var VARCHAR(50);
+    declare last_name_var VARCHAR(50);
+    declare therapist_email_var varchar(100);
+    declare phone_number_var CHAR(12);
+    declare zipcode_var CHAR(5);
+    declare cost_per_session_var INT;
+    
 end //
 delimiter ;
 
