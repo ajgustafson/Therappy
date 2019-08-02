@@ -3,6 +3,7 @@ use therappy;
 -- A stored procedure to insert some information into the User table after the user completes the questionaire.  
 -- Inserts information that does not depend on any other tables in the User table.
 -- Information that depends on other tables is inserted as null (and will be updated via another procedure)
+
 drop procedure if exists insert_user_basics;
 
 delimiter //
@@ -235,12 +236,6 @@ begin
 end //
 delimiter ;
 
--- IDEAS:
--- create a temporary table/view in findMatchingTherapists of all therapists the match
--- then in filterMatchingTherapists use similar user score and write matchign users to the user_matches_therapist table?
--- this link could be helpful:
--- https://stackoverflow.com/questions/41757141/how-to-pass-a-view-name-to-a-stored-procedure-in-sql-server-2014
-
 drop procedure if exists findMatchingTherapists;
 
 -- This procedure finds all user/therapist matches
@@ -258,16 +253,15 @@ begin
     declare gender_pref_var ENUM('F', 'M');
     declare qualification_pref_var int;
     declare zipcode_var varchar(5);
-    declare match_var int;
     declare max_cost_var int;
     
-    -- store in a view?
+    
     select
 		style_pref,
         max_distance,
         gender_pref,
         qualification_pref,
-        zip_code,
+        zipcode,
         max_cost
 	into
 		style_pref_var,
@@ -275,31 +269,31 @@ begin
 		gender_pref_var,
 		qualification_pref_var,
 		zipcode_var,
-        max_cost_var,
+        max_cost_var
 	from user
     where user_id = user_id_param;
     
-    -- http://www.mysqltutorial.org/stored-procedures-loop.aspx
     
-    -- LOOP CODE, loops through all therapists in the database to find match score
-		-- inside the loop
-		-- if gender_pref_var = therapist_gender
-			-- +1 to match score
-		-- if distance between zipcode_var and threapsit_zipcode <= 5
-			-- +1 to match score
-		-- if threapist_cost <= max_cost_var
-			-- +1 to match score
-		-- if therapist_treats_malady in user_malady selct table
-			-- +1 to match score
-		-- if user insurance in threapist_accepts_insurance for therapist_id
-			-- +1 to match score
-		-- if therapist_style = style_pref_var
-			-- +1 to match score
-        -- if avg_similar_score > 8 (?)
-			-- +1 to match score
-		-- if match_score > 5 insert therapist_id and user_id into matching table
-    
-	end if;
+    select therapist_id
+    from (
+	select
+		therapist_id,
+		gender = gender_pref_var as gender_pref_match,
+		style_id = style_pref_var as style_match,
+		qualification_id = qualification_pref_var as qualification_match,
+        cost_per_session <= max_cost_var as cost_match
+		-- user_id_param in (
+			-- select uem.user_id from user_exhibits_malady um
+            -- join user_exhibits_malady uem on (um.malady_id = uem.malady_id and um.user_id != uem.user_id)
+			-- where uem.user_id = user_id_param
+			-- ) as malady_match
+	from therapist
+    -- where zipcode of therapist in radius
+	-- https://blog.zipcodeapi.com/build-the-sql-where-clause/
+	-- https://www.zipcodeapi.com/rest/<api_key>/radius.<format>/<zip_code>/<distance>/<units>
+	group by therapist_id
+	having gender_pref_match + style_match + qualification_match + cost_match >= 4
+    )tmp;
     
     
 end //
@@ -309,9 +303,6 @@ drop procedure if exists filterMatchingTherapists;
 
 -- This procedure filters the list of user/therapist matches using 
 -- similar users then returns a list of the top 5
--- this link could be helpful:
--- https://stackoverflow.com/questions/41757141/how-to-pass-a-view-name-to-a-stored-procedure-in-sql-server-2014
-
 delimiter //
 
 create procedure filterMatchingTherapists 
@@ -338,3 +329,4 @@ delimiter ;
 -- ------------------ TESTS ------------------
 
 call findSimilarUsers(9);
+call findMatchingTherapists(9);
