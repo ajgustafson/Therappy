@@ -74,6 +74,12 @@ begin
 end //
 delimiter ;
 
+select *
+from user;
+
+select u.user_id, u.first_name, u.last_name, sum(if(u.gender_pref = u2.gender_pref,1,0))
+from user u join user u2 on (u.gender = u2.gender);
+
 -- IDEAS:
 -- create a temporary table/view in findMatchingTherapists of all therapists the match
 -- then in filterMatchingTherapists use similar user score and write matchign users to the user_matches_therapist table?
