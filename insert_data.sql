@@ -6,34 +6,34 @@ truncate user_exhibits_malady;
 truncate therapist_accepts_insurance;
 truncate therapist_treats_malady;
 truncate user_rates_therapist;
-truncate user_matches_therapist;
-truncate user_answers_questions;
+-- truncate user_matches_therapist;
+truncate user_makes_choices;
 truncate therapist;
 truncate user;
 truncate qualification;
 truncate malady;
 truncate style;
 truncate insurance;
-truncate question;
+truncate choice;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
 
 INSERT INTO insurance VALUES
-    ('Blue Cross Blue Shield'),
-    ('Tufts'),
-    ('Cigna'),
-    ('Aetna'),
-    ('United'),
-    ('Medicaid'),
-    ('Medicare'),
-    ('Wellpoint'),
-    ('Kaiser'),
-    ('Humana'),
-    ('Highmark'),
-    ('Fallon'),
-    ('Wellcare'),
-    ('Anthem Health');
+    (20000, 'Blue Cross Blue Shield'),
+    (20001, 'Tufts'),
+    (20002, 'Cigna'),
+    (20003, 'Aetna'),
+    (20004, 'United'),
+    (20005, 'Medicaid'),
+    (20006, 'Medicare'),
+    (20007, 'Wellpoint'),
+    (20008, 'Kaiser'),
+    (20009, 'Humana'),
+    (20010, 'Highmark'),
+    (20011, 'Fallon'),
+    (20012, 'Wellcare'),
+    (20013, 'Anthem Health');
     
 INSERT INTO malady VALUES
     (5001,'PTSD'),
