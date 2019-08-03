@@ -254,6 +254,7 @@ begin
     declare qualification_pref_var int;
     declare zipcode_var varchar(5);
     declare max_cost_var int;
+    declare needs_insurance_var tinyint;
     
     
     select
@@ -262,14 +263,16 @@ begin
         gender_pref,
         qualification_pref,
         zipcode,
-        max_cost
+        max_cost,
+        needs_insurance
 	into
 		style_pref_var,
 		max_distance_pref_var,
 		gender_pref_var,
 		qualification_pref_var,
 		zipcode_var,
-        max_cost_var
+        max_cost_var,
+        needs_insurance_var
 	from user
     where user_id = user_id_param;
     
@@ -282,17 +285,34 @@ begin
 		style_id = style_pref_var as style_match,
 		qualification_id = qualification_pref_var as qualification_match,
         cost_per_session <= max_cost_var as cost_match
+		if(need_insurance_var = 1) then
+			therapist_id in (
+				select 
+					t.therapist_id,
+					tai.insurance_id
+				from therapist t left join therapist_accepts_insurance tai using (therapist_id)
+				where tai.insurance_id in (
+					select 
+						i.insurance_id
+					from user left join insurance i using (insurance_id)
+					where user_id = 1
+				)
+				group by therapist_id
+            ) as insurance_match
+        end if;
+        -- zipcode in (API STUFF using max_distnace_pref
+        -- ) as distance_match,
+		-- https://blog.zipcodeapi.com/build-the-sql-where-clause/
+		-- https://www.zipcodeapi.com/rest/<api_key>/radius.<format>/<zip_code>/<distance>/<units>
 		-- user_id_param in (
 			-- select uem.user_id from user_exhibits_malady um
             -- join user_exhibits_malady uem on (um.malady_id = uem.malady_id and um.user_id != uem.user_id)
 			-- where uem.user_id = user_id_param
 			-- ) as malady_match
 	from therapist
-    -- where zipcode of therapist in radius
-	-- https://blog.zipcodeapi.com/build-the-sql-where-clause/
-	-- https://www.zipcodeapi.com/rest/<api_key>/radius.<format>/<zip_code>/<distance>/<units>
 	group by therapist_id
-	having gender_pref_match + style_match + qualification_match + cost_match >= 4
+	having gender_pref_match + style_match + qualification_match + cost_match + insurance_match>= 4
+    -- add malady_match, distance_match
     )tmp;
     
     
