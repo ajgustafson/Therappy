@@ -1,4 +1,9 @@
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import JDBC_utils.DBUtils;
 
@@ -12,10 +17,11 @@ public class API implements TherAppyAPI {
 
 
   /**
-   * FIXME - this method updated by Jeff and Mukhi on 8/1
-   * When a user fills out all the information asked in the user-interface, this method inserts the majority
-   * of the entered information into the appropriate tables in the database.  The user's answers to the last
-   * 5 questions of our survey (related to style pref) are inserted via a separate method.
+   * FIXME - this method updated by Jeff and Mukhi on 8/1 When a user fills out all the information
+   * asked in the user-interface, this method inserts the majority of the entered information into
+   * the appropriate tables in the database.  The user's answers to the last 5 questions of our
+   * survey (related to style pref) are inserted via a separate method.
+   *
    * @param user User to insert
    * @return the userID for this user; -1 if user already exists - TODO - TBD this may change
    */
@@ -51,9 +57,10 @@ public class API implements TherAppyAPI {
 
 
   /**
-   * FIXME - this method updated by Jeff and Mukhi on 8/1
-   * This method inserts the user's responses to one of the 5 questions related to style pref into the database.
-   * @param user User that responded to the question
+   * FIXME - this method updated by Jeff and Mukhi on 8/1 This method inserts the user's responses
+   * to one of the 5 questions related to style pref into the database.
+   *
+   * @param user     User that responded to the question
    * @param choiceID ID of the choice to which this response correlates
    */
   @Override
@@ -66,12 +73,12 @@ public class API implements TherAppyAPI {
   }
 
   /**
-   * FIXME - this method updated by Jeff and Mukhi on 8/1
-   * This method populates (via a call to a stored procedure) the user's style preference in the DB.
-   * This method should be called after the user's responses to the 5 questions related to style pref have been
-   * inserted into the DB
-   * @param user User to update style pref for
-   * TODO -  add exception handling in case this method is called when all the needed data isn't present
+   * FIXME - this method updated by Jeff and Mukhi on 8/1 This method populates (via a call to a
+   * stored procedure) the user's style preference in the DB. This method should be called after the
+   * user's responses to the 5 questions related to style pref have been inserted into the DB
+   *
+   * @param user User to update style pref for TODO -  add exception handling in case this method is
+   *             called when all the needed data isn't present
    */
   @Override
   public void updateUserStyle(User user) {
@@ -81,11 +88,12 @@ public class API implements TherAppyAPI {
   }
 
   /**
-   * FIXME - this method updated by Jeff and Mukhi on 8/1
-   * Method to insert a user's rating of a therapist into the database
-   * @param user User who rates the therapist
+   * FIXME - this method updated by Jeff and Mukhi on 8/1 Method to insert a user's rating of a
+   * therapist into the database
+   *
+   * @param user        User who rates the therapist
    * @param therapistID ID of the therapist that was rated
-   * @param rating rating the user gave to the therapist
+   * @param rating      rating the user gave to the therapist
    */
   public void insertTherapistRating(User user, int therapistID, int rating) {
     String user_rates_therapist_sql = "call insert_therapist_rating('" + user.getEmail() +
@@ -122,9 +130,29 @@ public class API implements TherAppyAPI {
     dbutil = new DBUtils("jdbc:mysql://localhost:3306/therappy", user, password);
   }
 
+  public void filterTherapistMatches(User user) throws IOException {
+
+    InputStream in = new URL("https://www.zipcodeapi.com/rest/" +
+            "hYoS9BQmhj6fALZMB01LzPmHXlwv6AKAua1gMD39RjY6UhdkDqhYg94a7VcVuYVk/" +
+            "radius.csv/" + user.getZipCode() + "/5/mile").openStream();
+
+    Scanner scanner = new Scanner(in);
+    List<Integer> zips = new ArrayList<>();
+
+    String line = scanner.nextLine();
+
+    while (scanner.hasNext()) {
+      line = scanner.nextLine();
+      zips.add(Integer.parseInt(line.split(",")[0]));
+    }
+
+  }
+
 
   /**
    * Close the connection when application finishes
    */
-  public void closeConnection() { dbutil.closeConnection(); }
+  public void closeConnection() {
+    dbutil.closeConnection();
+  }
 }
