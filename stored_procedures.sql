@@ -380,34 +380,48 @@ begin
 	-- >= 5 is 5, >= 4 is 4, >= 3 is 3, >= 2 is 2, and < 2 is 1
     
     
-    if(0 = (select
-			count(*)
-			from similar_users su join user_rates_therapist urt on (su.user_id = urt.user_id))) then
-		select therapist_id,
-			first_name,
-			last_name,
-			dob,
-			gender,
-			email,
-			phone_number,
-			zipcode,
-			cost_per_session,
-			style_id,
-			qualification_id,
-			gender_pref_match + style_match + qualification_match + cost_match + malady_match + insurance_match as 'match_score'
-        from therapist_scores;
-	
-    else
-		select
-			ts.therapist_id,
-			ts.gender_pref_match + ts.style_match + ts.qualification_match + ts.cost_match + ts.malady_match + ts.insurance_match + avg(urt.rating) as 'match_score'
-		from similar_users su join user_rates_therapist urt on (su.user_id = urt.user_id)
-		join therapist_scores ts on (urt.therapist_id = ts.therapist_id)
-		group by ts.therapist_id
+    -- if(0 = (select
+			-- count(*)
+			-- from similar_users su join user_rates_therapist urt on (su.user_id = urt.user_id))) then
+		select ts.therapist_id,
+			ts.first_name,
+			ts.last_name,
+			ts.dob,
+			ts.gender,
+			ts.email,
+			ts.phone_number,
+			ts.zipcode,
+			ts.cost_per_session,
+			ts.style_id,
+			ts.qualification_id,
+			ifnull(round(ts.gender_pref_match + ts.style_match + ts.qualification_match + ts.cost_match + ts.malady_match + ts.insurance_match + ifnull((avg(urt.rating)), 0), 2), 0) as 'match_score'
+        from therapist_scores ts left join user_rates_therapist urt on (ts.therapist_id = urt.therapist_id)
+        left join similar_users using (user_id)
+        group by ts.therapist_id
 		having match_score > 0
-		order by match_score > 0 DESC;
+		order by match_score DESC;
+	
+    -- else
+		-- select
+			-- ts.therapist_id,
+			-- ts.first_name,
+			-- ts.last_name,
+			-- ts.dob,
+			-- ts.gender,
+			-- ts.email,
+			-- ts.phone_number,
+			-- ts.zipcode,
+			-- ts.cost_per_session,
+			-- ts.style_id,
+			-- ts.qualification_id,
+			-- round(ts.gender_pref_match + ts.style_match + ts.qualification_match + ts.cost_match + ts.malady_match + ts.insurance_match + ifnull(avg(urt.rating), 0),2)  as 'match_score'
+		-- from similar_users su join user_rates_therapist urt on (su.user_id = urt.user_id)
+		-- join therapist_scores ts on (urt.therapist_id = ts.therapist_id)
+		-- group by ts.therapist_id
+		-- having match_score > 0
+		-- order by match_score DESC;
         
-    end if;
+    -- end if;
     
     drop temporary table if exists similar_users;
     drop temporary table if exists therapist_scores;
@@ -418,6 +432,22 @@ delimiter ;
 
 -- ------------------ TESTS ------------------
 
--- user_id = 9
+insert into user_rates_therapist values
+	(12, 1001, 5),
+    (25, 1001, 5),
+    (34, 1001, 5),
+    (69, 1001, 5),
+    (75, 1001, 5),
+    (115, 1203, 3),
+    (141, 1203, 3),
+    (144, 1203, 3),
+    (12, 1203, 1),
+    (25, 1203, 1);
+
+select * from user_rates_therapist;
+select * from user;
+
 call findSimilarUsers('gwickman8@abc.net.au');
 call findMatchingTherapists('gwickman8@abc.net.au');
+
+call findMatchingTherapists('kthorpc@mac.com');
