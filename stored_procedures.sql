@@ -186,7 +186,7 @@ delimiter //
 
 create procedure findSimilarUsers
 (
-	in user_id_param int  -- params go here, separated by commas
+	in user_email_param varchar(255)  -- params go here, separated by commas
 )
 
 begin
@@ -196,21 +196,24 @@ begin
     declare age_var int;
     declare style_pref_var int; -- variable declarations, ending each lline with semicolons
     declare qualification_pref_var int;
+    declare user_id_var int;
     
     select
 		gender,
 		gender_pref,
         year(now()) - year(dob),
         style_pref,
-        qualification_pref
+        qualification_pref,
+        user_id
 	into
 		gender_var,
 		gender_pref_var,
 		age_var,
 		style_pref_var,
-		qualification_pref_var
+		qualification_pref_var,
+        user_id_var
 	from user
-    where user_id = user_id_param;
+    where email = user_email_param;
     
     select user_id, first_name, last_name
     from (
@@ -224,10 +227,10 @@ begin
 		user_id in (
 			select uem.user_id from user_exhibits_malady um 
             join user_exhibits_malady uem on (um.malady_id = uem.malady_id and um.user_id != uem.user_id)
-			where uem.user_id = user_id_param
+			where uem.user_id = user_id_var
 			) as malady_match
 	from user
-	where user_id_param != user_id
+	where user_id_var != user_id
 	group by user_id
 	having gender_match + gender_pref_match + age_match + style_match + qualification_match >= 4
     )tmp;
@@ -243,21 +246,24 @@ delimiter //
 
 create procedure findMatchingTherapists
 (
-	in user_id_param int  -- params go here, separated by commas
+	in user_email_param varchar(255) -- params go here, separated by commas
 )
 
 begin
-
-    declare style_pref_var int; -- variable declarations, ending each lline with semicolons
+	
+    declare user_id_var int; -- variable declarations, ending each line with semicolons
+    declare style_pref_var int; 
     declare max_distance_pref_var int;
     declare gender_pref_var ENUM('F', 'M');
     declare qualification_pref_var int;
     declare zipcode_var varchar(5);
     declare max_cost_var int;
     declare needs_insurance_var tinyint;
+    declare malady_id_var int;
     
     
     select
+		user_id,
 		style_pref,
         max_distance,
         gender_pref,
@@ -266,6 +272,7 @@ begin
         max_cost,
         needs_insurance
 	into
+		user_id_var,
 		style_pref_var,
 		max_distance_pref_var,
 		gender_pref_var,
@@ -274,46 +281,66 @@ begin
         max_cost_var,
         needs_insurance_var
 	from user
-    where user_id = user_id_param;
+    where email = user_email_param;
     
     
-    select therapist_id
+    
+    select 
+		therapist_id,
+        first_name,
+        last_name,
+        dob,
+        gender,
+        email,
+        phone_number,
+        zipcode,
+        cost_per_session,
+        style_id,
+        qualification_id,
+		gender_pref_match + style_match + qualification_match + cost_match + malady_match + insurance_match as 'match_score'
     from (
 	select
-		therapist_id,
+		*,
+        
+        -- finds if user gender_pref matches therapist gender (1 if matches, 0 if not)
 		gender = gender_pref_var as gender_pref_match,
+        
+        -- finds if user style_pref matches therapist style (1 if matches, 0 if not)
 		style_id = style_pref_var as style_match,
+        
+        -- finds if user qualification_pref matches therapist qualification (1 if matches, 0 if not)
 		qualification_id = qualification_pref_var as qualification_match,
-        cost_per_session <= max_cost_var as cost_match
-		if(need_insurance_var = 1) then
-			therapist_id in (
+	
+        -- finds if user max cost is less than or equal to therapist cost (1 if matches, 0 if not)
+        cost_per_session <= max_cost_var as cost_match,
+        
+        -- finds if threapist specializes in user's malady (1 if matches, 0 if not)
+        therapist_id in (select 
+				therapist_id
+				from user left join user_exhibits_malady using (user_id) 
+				left join therapist_treats_malady using (malady_id)
+				where malady_id = malady_id_var
+				group by therapist_id) as malady_match,
+
+		-- checks if user needs therapist to take insurance
+        -- if yes then checks for insurance match
+		case when needs_insurance_var = 1
+			then therapist_id in (
 				select 
-					t.therapist_id,
-					tai.insurance_id
+				t.therapist_id
 				from therapist t left join therapist_accepts_insurance tai using (therapist_id)
 				where tai.insurance_id in (
 					select 
-						i.insurance_id
+					i.insurance_id
 					from user left join insurance i using (insurance_id)
-					where user_id = 1
-				)
-				group by therapist_id
-            ) as insurance_match
-        end if;
-        -- zipcode in (API STUFF using max_distnace_pref
-        -- ) as distance_match,
-		-- https://blog.zipcodeapi.com/build-the-sql-where-clause/
-		-- https://www.zipcodeapi.com/rest/<api_key>/radius.<format>/<zip_code>/<distance>/<units>
-		-- user_id_param in (
-			-- select uem.user_id from user_exhibits_malady um
-            -- join user_exhibits_malady uem on (um.malady_id = uem.malady_id and um.user_id != uem.user_id)
-			-- where uem.user_id = user_id_param
-			-- ) as malady_match
+					where user_id = user_id_var))
+			else 1
+		end as insurance_match		
 	from therapist
 	group by therapist_id
-	having gender_pref_match + style_match + qualification_match + cost_match + insurance_match>= 4
-    -- add malady_match, distance_match
-    )tmp;
+    )tmp
+    having match_score > 0
+    order by match_score DESC;
     
     
 end //
@@ -340,13 +367,12 @@ begin
     declare zipcode_var CHAR(5);
     declare cost_per_session_var INT;
     
-    select 
-    
 end //
 delimiter ;
 
 
 -- ------------------ TESTS ------------------
 
-call findSimilarUsers(9);
-call findMatchingTherapists(9);
+-- user_id = 9
+call findSimilarUsers('gwickman8@abc.net.au');
+call findMatchingTherapists('gwickman8@abc.net.au');
