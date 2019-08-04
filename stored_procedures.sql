@@ -260,7 +260,9 @@ begin
     declare max_cost_var int;
     declare needs_insurance_var tinyint;
     declare malady_id_var int;
-    
+    declare gender_var ENUM('F', 'M');
+    declare age_var int;
+
     
     select
 		user_id,
@@ -270,7 +272,9 @@ begin
         qualification_pref,
         zipcode,
         max_cost,
-        needs_insurance
+        needs_insurance,
+        gender,
+        year(now()) - year(dob)
 	into
 		user_id_var,
 		style_pref_var,
@@ -279,12 +283,38 @@ begin
 		qualification_pref_var,
 		zipcode_var,
         max_cost_var,
-        needs_insurance_var
+        needs_insurance_var,
+        gender_var,
+        age_var
 	from user
     where email = user_email_param;
     
+	drop temporary table if exists similar_users;
+    drop temporary table if exists therapist_scores;
     
+    -- creates a table of similar users to be used when calculating avg similar user rating per therapist
+	create temporary table similar_users as
+	select user_id
+    from (
+		select
+			user_id, first_name, last_name,
+			gender = gender_var as gender_match,
+			gender_pref = gender_pref_var as gender_pref_match,
+			abs(CAST(age_var AS SIGNED) - CAST(year(now()) - year(dob) as signed)) <= 5 as age_match,
+			style_pref_var = style_pref as style_match,
+			qualification_pref_var = qualification_pref as qualification_match,
+			user_id in (
+				select uem.user_id from user_exhibits_malady um 
+				join user_exhibits_malady uem on (um.malady_id = uem.malady_id and um.user_id != uem.user_id)
+				where uem.user_id = user_id_var
+				) as malady_match
+		from user
+		where user_id_var != user_id
+		group by user_id
+		having gender_match + gender_pref_match + age_match + style_match + qualification_match >= 4
+	)tmpSimilar;
     
+	create temporary table therapist_scores as
     select 
 		therapist_id,
         first_name,
@@ -297,11 +327,15 @@ begin
         cost_per_session,
         style_id,
         qualification_id,
-		gender_pref_match + style_match + qualification_match + cost_match + malady_match + insurance_match as 'match_score'
+		gender_pref_match,
+        style_match,
+        qualification_match,
+        cost_match,
+        malady_match,
+        insurance_match
     from (
 	select
 		*,
-        
         -- finds if user gender_pref matches therapist gender (1 if matches, 0 if not)
 		gender = gender_pref_var as gender_pref_match,
         
@@ -335,37 +369,48 @@ begin
 					from user left join insurance i using (insurance_id)
 					where user_id = user_id_var))
 			else 1
-		end as insurance_match		
+		end as insurance_match
 	from therapist
 	group by therapist_id
-    )tmp
-    having match_score > 0
-    order by match_score DESC;
+    )tmpTherapist;
     
     
-end //
-delimiter ;
-
-drop procedure if exists filterMatchingTherapists;
-
--- This procedure filters the list of user/therapist matches using 
--- similar users then returns a list of the top 5
-delimiter //
-
-create procedure filterMatchingTherapists 
-(
-	in user_id_param int  -- params go here, separated by commas
-)
-
-begin
-
-    declare therapist_id_var int; -- variable declarations, ending each lline with semicolons
-	declare first_name_var VARCHAR(50);
-    declare last_name_var VARCHAR(50);
-    declare therapist_email_var varchar(100);
-    declare phone_number_var CHAR(12);
-    declare zipcode_var CHAR(5);
-    declare cost_per_session_var INT;
+    -- gets the average score by similar users for each therapist
+	-- then assigns quality points based on average score
+	-- >= 5 is 5, >= 4 is 4, >= 3 is 3, >= 2 is 2, and < 2 is 1
+    
+    
+    if(0 = (select
+			count(*)
+			from similar_users su join user_rates_therapist urt on (su.user_id = urt.user_id))) then
+		select therapist_id,
+			first_name,
+			last_name,
+			dob,
+			gender,
+			email,
+			phone_number,
+			zipcode,
+			cost_per_session,
+			style_id,
+			qualification_id,
+			gender_pref_match + style_match + qualification_match + cost_match + malady_match + insurance_match as 'match_score'
+        from therapist_scores;
+	
+    else
+		select
+			ts.therapist_id,
+			ts.gender_pref_match + ts.style_match + ts.qualification_match + ts.cost_match + ts.malady_match + ts.insurance_match + avg(urt.rating) as 'match_score'
+		from similar_users su join user_rates_therapist urt on (su.user_id = urt.user_id)
+		join therapist_scores ts on (urt.therapist_id = ts.therapist_id)
+		group by ts.therapist_id
+		having match_score > 0
+		order by match_score > 0 DESC;
+        
+    end if;
+    
+    drop temporary table if exists similar_users;
+    drop temporary table if exists therapist_scores;
     
 end //
 delimiter ;
