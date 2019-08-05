@@ -38,8 +38,21 @@ public class UI {
     scan.useDelimiter("/");
 
 
-
+    User newUser = new User();
+    return newUser;
   }
+  // Menu
+    // Get matches
+    // Rate therapist
+    // Retake questionnaire
+    // Delete account
+    // Logout
 
-  //
+  // New user
+    // Fill out questionnaire
+    // Display menu
+
+  // Returning user
+    // Display menu
+
 }

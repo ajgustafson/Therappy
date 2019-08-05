@@ -124,7 +124,7 @@ public class API implements TherAppyAPI {
   public void insertRating(User user, Therapist therapist, int rating) {
 
   }
-
+  @Override
   public void authenticate(String user, String password) {
 
     dbutil = new DBUtils("jdbc:mysql://localhost:3306/therappy", user, password);
@@ -152,6 +152,7 @@ public class API implements TherAppyAPI {
   /**
    * Close the connection when application finishes
    */
+  @Override
   public void closeConnection() {
     dbutil.closeConnection();
   }

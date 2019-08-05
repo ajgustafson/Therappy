@@ -60,16 +60,29 @@ public interface TherAppyAPI {
    */
   void insertRating(User user, Therapist therapist, int rating);
 
-    /**
-     * Set connection settings
-     * @param user
-     * @param password
-     */
-    public void authenticate(String user, String password);
+  /**
+   * Check the password for a given user.
+   * @param user User to login with given password
+   * @param password to authenticate
+   */
+  void checkPassword(User user, String password);
 
-    /**
-     * Close the connection when application finishes
-     */
-    public void closeConnection();
+  /**
+   * Delete user from the database.
+   * @param user to delete from database
+   */
+  void deleteUser(User user);
+
+  /**
+   * Set connection settings
+   * @param user
+   * @param password
+   */
+  void authenticate(String user, String password);
+
+  /**
+   * Close the connection when application finishes
+   */
+  void closeConnection();
 
 }
