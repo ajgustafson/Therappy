@@ -7,23 +7,24 @@ DROP TABLE IF EXISTS therapist_accepts_insurance;
 DROP TABLE IF EXISTS therapist_treats_malady;
 DROP TABLE IF EXISTS user_rates_therapist;
 DROP TABLE IF EXISTS user_matches_therapist;
-DROP TABLE IF EXISTS user_answers_questions;
+DROP TABLE IF EXISTS user_makes_choices;
 DROP TABLE IF EXISTS therapist;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS qualification;
 DROP TABLE IF EXISTS malady;
 DROP TABLE IF EXISTS style;
 DROP TABLE IF EXISTS insurance;
-DROP TABLE IF EXISTS question;
+DROP TABLE IF EXISTS choice;
 
 
-CREATE TABLE question (
-	question_id INT PRIMARY KEY,
-    content VARCHAR(200) NOT NULL UNIQUE
+CREATE TABLE choice (
+	choice_id INT PRIMARY KEY,
+        content VARCHAR(200) NOT NULL UNIQUE,
+	value INT
 );
 
 CREATE TABLE insurance (
-	insurance_id INT PRIMARY KEY,
+	insurance_id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL UNIQUE
 );
 
@@ -43,19 +44,20 @@ CREATE TABLE qualification (
 );
 
 CREATE TABLE user (
-	user_id INT PRIMARY KEY,
+	user_id INT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     username VARCHAR(50) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
     pwd VARCHAR(20) NOT NULL,
-    gender ENUM('F', 'M'),
-    zipcode CHAR(5) NOT NULL,
     dob DATE,
+    gender ENUM('F', 'M'),
+    email VARCHAR(100) NOT NULL UNIQUE,
+    zipcode CHAR(5) NOT NULL,
     insurance_id INT,
     CONSTRAINT user_fk_insurance FOREIGN KEY (insurance_id) references insurance (insurance_id),
     max_distance INT NOT NULL,
     gender_pref ENUM('F', 'M'),
+    max_cost INT,
     qualification_pref INT,
     CONSTRAINT user_fk_qualification FOREIGN KEY (qualification_pref) references qualification (qualification_id),
     needs_insurance boolean NOT NULL,
@@ -67,10 +69,10 @@ CREATE TABLE therapist (
 	therapist_id INT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
+    dob DATE NOT NULL,
     gender ENUM('F', 'M') NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     phone_number CHAR(12) NOT NULL,
-    dob DATE NOT NULL,
     zipcode CHAR(5) NOT NULL,
     cost_per_session INT NOT NULL,
     style_id INT NOT NULL,
@@ -93,8 +95,8 @@ CREATE TABLE user_rates_therapist (
     CONSTRAINT rates_fk_user FOREIGN KEY (user_id) references user (user_id),
     therapist_id INT NOT NULL,
     CONSTRAINT rates_fk_therapist FOREIGN KEY (therapist_id) references therapist (therapist_id),
-    rating INT NOT NULL,
-    PRIMARY KEY (user_id, therapist_id)
+    rating INT NOT NULL
+    
 );
 
 CREATE TABLE therapist_treats_malady (
@@ -117,97 +119,14 @@ CREATE TABLE user_exhibits_malady (
 	user_id INT NOT NULL,
     CONSTRAINT exhibits_fk_user FOREIGN KEY (user_id) references user (user_id),
     malady_id INT NOT NULL,
-    CONSTRAINT exibits_fk_malady FOREIGN KEY (malady_id) references malady (malady_id),
-    PRIMARY KEY (user_id, malady_id)
+    CONSTRAINT exibits_fk_malady FOREIGN KEY (malady_id) references malady (malady_id)
+   
 );
 
-CREATE TABLE user_answers_questions(
+CREATE TABLE user_makes_choices(
 	user_id INT NOT NULL,
     CONSTRAINT answer_fk_user FOREIGN KEY (user_id) references user (user_id),
-    question_id INT NOT NULL,
-    CONSTRAINT answer_fk_question FOREIGN KEY (question_id) references question (question_id),
-    PRIMARY KEY (user_id, question_id)
+    choice_id INT NOT NULL,
+    CONSTRAINT answer_fk_choice FOREIGN KEY (choice_id) references choice(choice_id)
+    
 );
-
-
-delimiter //
--- This procedure adds a new user to the databse AFTER they have completed the questionaire
-
-create procedure addUser
-(
-	in first_name_param VARCHAR(50),
-    in last_name_param VARCHAR(50),
-    in username_param VARCHAR(50),
-    in email_param VARCHAR(100),
-    in pwd_param VARCHAR(20),
-    in gender_param ENUM('F', 'M'),
-    in zipcode_param CHAR(5),
-    in dob_param DATE,
-    in insurance_param VARCHAR(100),
-    in max_distance_param INT,
-    in gender_pref_param ENUM('F', 'M'),
-    in qualification_pref_param VARCHAR(100),
-    in needs_insurance_param boolean,
-    in question_1_param int,
-    in question_2_param int,
-    in question_3_param int,
-    in question_4_param int,
-    in question_5_param int
-)
-
-begin
-	-- variable declarations
-    declare style_pref_var int;
-    declare qualification_pref_id_var int;
-    declare insurance_id_var int;
-    declare user_id_var int;
-    
-end //
-delimiter ;
-
--- This procedure finds all similar users to the current user
-delimiter //
-
-create procedure findSimilarUsers
-(
-	in param_name int  -- params go here, separated by commas
-)
-
-begin
-
-    declare var_name int; -- variable declarations, ending each lline with semicolons
-    
-end //
-delimiter ;
-
-
--- This procedure finds all user/therapist matches
-delimiter //
-
-create procedure findMatchingTherapists
-(
-	in param_name int  -- params go here, separated by commas
-)
-
-begin
-
-    declare var_name int; -- variable declarations, ending each lline with semicolons
-    
-end //
-delimiter ;
-
--- This procedure filters the list of user/therapist matches using 
--- similar users then returns a list of the top 5
-delimiter //
-
-create procedure filterMatchingTherapists 
-(
-	in param_name int  -- params go here, separated by commas
-)
-
-begin
-
-    declare var_name int; -- variable declarations, ending each lline with semicolons
-    
-end //
-delimiter ;

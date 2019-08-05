@@ -8,7 +8,7 @@ public class User {
   private String lastName;
   private String username;
   private String password;
-  private Date dob;
+  private String dob;
   private String gender;  // 'Female', 'Male'
   private String email;
   private String zipCode;
@@ -21,7 +21,7 @@ public class User {
   private int needsInsurance;
   private int prefStyle;
 
-  public User(String lastName, String firstName, String username, String password, String email, String gender, Date dob,
+  public User(String lastName, String firstName, String username, String password, String email, String gender, String dob,
               String zipCode, String insurance, List<String> maladies, int maxDistance, String prefGender,
               int maxCost, String prefQualification, int needsInsurance, int prefStyle) {
     // this.userID = ID;
@@ -68,7 +68,7 @@ public class User {
     return gender;
   }
 
-  public Date getDob() {
+  public String getDob() {
     return dob;
   }
 

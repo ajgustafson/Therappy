@@ -1,7 +1,6 @@
 README
 
-This README is for TherAAPy, a web-based app to help people find a therapist, created for Northeastern University’s CS-5200 Database Management course. The goal is to find a user their best match therapist. To do this, a user is asked set of questions and, based on their answers, compared to other users in the system, finding other users with the same profile. These other users have rated previous therapists and the program utilizes their ratings to match the user with the best therapist. 
-Future iterations of this app will include more therapy styles, a greater selection of maladys, and algorithmic matching techniques based on a greater set of therapist/user values.
+This README is for TherAPPy, a web-based app to help people find a therapist, created for Northeastern University’s CS-5200 Database Management course. The goal is to find a user their best match therapist. To do this, a user is asked set of questions and, based on their answers, compared to other users in the system, finding other users with the same profile. These other users have rated previous therapists and the program utilizes their ratings to match the user with the best therapist. 
 
 AUTHORS
 Cassidy Bayen, MSCS, Northeastern University
@@ -20,6 +19,9 @@ Mental health statistics sourced from:
 Chamberlin, J. (2004, August). Survey says: More Americans are seeking mental health treatment. Retrieved from https://www.apa.org/monitor/julaug04/survey
 Zip code dataset sourced from:
 SimpleMaps. (2019, July 11). US Zip Codes Database. Retrieved July 13, 2019, from https://simplemaps.com/data/us-zips
+
+ROAD MAP
+Currently, the application is command line based. In future iterations a user will be able to download a mobile app and access through the web. Future iterations of this app will also include more therapy styles, a greater selection of maladys, and algorithmic matching techniques based on a greater set of therapist/user values.
 
 BUGS
 None – but if you find one, please let us know!
