@@ -179,69 +179,18 @@ insert into user_rates_therapist(user_id, therapist_id, rating) values (user_id_
 end //
 delimiter ;
 
-DROP PROCEDURE IF EXISTS findSimilarUsers;
-
--- This procedure finds all similar users to the current user
-delimiter //
-
-create procedure findSimilarUsers
-(
-	in user_email_param varchar(255)  -- params go here, separated by commas
-)
-
-begin
-
-	declare gender_var ENUM('F', 'M');
-    declare gender_pref_var ENUM('F', 'M');
-    declare age_var int;
-    declare style_pref_var int; -- variable declarations, ending each lline with semicolons
-    declare qualification_pref_var int;
-    declare user_id_var int;
-    
-    select
-		gender,
-		gender_pref,
-        year(now()) - year(dob),
-        style_pref,
-        qualification_pref,
-        user_id
-	into
-		gender_var,
-		gender_pref_var,
-		age_var,
-		style_pref_var,
-		qualification_pref_var,
-        user_id_var
-	from user
-    where email = user_email_param;
-    
-    select user_id, first_name, last_name
-    from (
-	select
-		user_id, first_name, last_name,
-		gender = gender_var as gender_match,
-		gender_pref = gender_pref_var as gender_pref_match,
-		abs(CAST(age_var AS SIGNED) - CAST(year(now()) - year(dob) as signed)) <= 5 as age_match,
-		style_pref_var = style_pref as style_match,
-		qualification_pref_var = qualification_pref as qualification_match,
-		user_id in (
-			select uem.user_id from user_exhibits_malady um 
-            join user_exhibits_malady uem on (um.malady_id = uem.malady_id and um.user_id != uem.user_id)
-			where uem.user_id = user_id_var
-			) as malady_match
-	from user
-	where user_id_var != user_id
-	group by user_id
-	having gender_match + gender_pref_match + age_match + style_match + qualification_match >= 4
-    )tmp;
-    
-    
-end //
-delimiter ;
 
 drop procedure if exists findMatchingTherapists;
 
--- This procedure finds all user/therapist matches
+-- This procedure finds all user/therapist matches based on the following criteria:
+-- +1 if the user's style preference matches the therapit's style
+-- +1 if the user's gender preference matches the therapit's gender
+-- +1 if the user's qualification preference matches the therapit's qualification
+-- +1 if the therapists price is less than the user's maxmimum cost
+-- +1 if the user needs to use insurance and the therapist takes their insurance
+-- +1 if the therapist specializes in the user's malady
+-- +1-5 based on the avg similar user score of a therapist (1 being therapist had a one rating and 5 being they had a five rating)
+
 delimiter //
 
 create procedure findMatchingTherapists
@@ -253,10 +202,8 @@ begin
 	
     declare user_id_var int; -- variable declarations, ending each line with semicolons
     declare style_pref_var int; 
-    declare max_distance_pref_var int;
     declare gender_pref_var ENUM('F', 'M');
     declare qualification_pref_var int;
-    declare zipcode_var varchar(5);
     declare max_cost_var int;
     declare needs_insurance_var tinyint;
     declare malady_id_var int;
@@ -267,10 +214,8 @@ begin
     select
 		user_id,
 		style_pref,
-        max_distance,
         gender_pref,
         qualification_pref,
-        zipcode,
         max_cost,
         needs_insurance,
         gender,
@@ -278,10 +223,8 @@ begin
 	into
 		user_id_var,
 		style_pref_var,
-		max_distance_pref_var,
 		gender_pref_var,
 		qualification_pref_var,
-		zipcode_var,
         max_cost_var,
         needs_insurance_var,
         gender_var,
@@ -314,6 +257,7 @@ begin
 		having gender_match + gender_pref_match + age_match + style_match + qualification_match >= 4
 	)tmpSimilar;
     
+    -- creates a table of match score for all therapists for a given user
 	create temporary table therapist_scores as
     select 
 		therapist_id,
@@ -374,15 +318,9 @@ begin
 	group by therapist_id
     )tmpTherapist;
     
-    
-    -- gets the average score by similar users for each therapist
-	-- then assigns quality points based on average score
-	-- >= 5 is 5, >= 4 is 4, >= 3 is 3, >= 2 is 2, and < 2 is 1
-    
-    
-    -- if(0 = (select
-			-- count(*)
-			-- from similar_users su join user_rates_therapist urt on (su.user_id = urt.user_id))) then
+    -- This query joins therapist scores, user ratings, and similar users to get the final match score of every therapist by adding
+    -- the therapist scores to the avg similar user rating score
+    -- The result is sent to java where it will then be further filtered
 		select ts.therapist_id,
 			ts.first_name,
 			ts.last_name,
@@ -400,28 +338,6 @@ begin
         group by ts.therapist_id
 		having match_score > 0
 		order by match_score DESC;
-	
-    -- else
-		-- select
-			-- ts.therapist_id,
-			-- ts.first_name,
-			-- ts.last_name,
-			-- ts.dob,
-			-- ts.gender,
-			-- ts.email,
-			-- ts.phone_number,
-			-- ts.zipcode,
-			-- ts.cost_per_session,
-			-- ts.style_id,
-			-- ts.qualification_id,
-			-- round(ts.gender_pref_match + ts.style_match + ts.qualification_match + ts.cost_match + ts.malady_match + ts.insurance_match + ifnull(avg(urt.rating), 0),2)  as 'match_score'
-		-- from similar_users su join user_rates_therapist urt on (su.user_id = urt.user_id)
-		-- join therapist_scores ts on (urt.therapist_id = ts.therapist_id)
-		-- group by ts.therapist_id
-		-- having match_score > 0
-		-- order by match_score DESC;
-        
-    -- end if;
     
     drop temporary table if exists similar_users;
     drop temporary table if exists therapist_scores;
@@ -432,6 +348,7 @@ delimiter ;
 
 -- ------------------ TESTS ------------------
 
+-- test user ratings for 'kthorpc@mac.com''s similar users
 insert into user_rates_therapist values
 	(12, 1001, 5),
     (25, 1001, 5),
@@ -447,7 +364,6 @@ insert into user_rates_therapist values
 select * from user_rates_therapist;
 select * from user;
 
-call findSimilarUsers('gwickman8@abc.net.au');
 call findMatchingTherapists('gwickman8@abc.net.au');
 
 call findMatchingTherapists('kthorpc@mac.com');
