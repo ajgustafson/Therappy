@@ -1,15 +1,17 @@
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import JDBC_utils.DBUtils;
+
 public class UI {
+  DBUtils db = new DBUtils("jdbc:mysql://localhost:3306/Therappy?serverTimezone=EST5EDT",
+          "therappy", "therappyproject!");
+  API api = new API(db);
   User user;
   Scanner scan = new Scanner(System.in);
 
-  public void displayGreeting() {
+  public void setUser() {
     System.out.println("Welcome to TherAppy!");
 
     String response = "";
@@ -20,10 +22,16 @@ public class UI {
       response = scan.nextLine();
       response = response.toUpperCase();
     }
-    System.out.println("You responded: " + response);
+
+    if (response.equals("N")) {
+      this.user = newUser();
+    }
+    else {
+      // this.user = returning User();
+    }
   }
 
-  public User newUser() {
+  private User newUser() {
     System.out.println("We're glad you are here!  Let us help you set up a profile to find a" +
             " therapist who matches your needs and preferences.");
     System.out.println("First name: ");
@@ -39,15 +47,7 @@ public class UI {
     String password = scan.nextLine();
 
     System.out.println("Birthdate (MM-DD-YYY): ");
-    String birthdate = scan.nextLine();
-
-    SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
-    Date dob;
-    try {
-      dob = sdf.parse(birthdate);
-    } catch (ParseException e) {
-      System.out.println("Birthdate error.");
-    }
+    String dob = scan.nextLine();
 
     System.out.println("Gender (F/M): ");
     String gender = scan.nextLine();
@@ -63,19 +63,16 @@ public class UI {
 
     List<String> maladies = getMaladies();
 
-    System.out.println("Maximum distance you would like to travel\n" +
-            "to meet with your therapist (estimate to the nearest mile): ");
+    System.out.println("Maximum distance you would like to travel to meet with your therapist (estimate to the nearest mile): ");
     int maxDistance = scan.nextInt();
 
     System.out.println("Preferred therapist gender (F/M): ");
     String prefGender = scan.nextLine();
 
-    System.out.println("Maximum cost you are able to pay per session\n" +
-            "(estimate to the nearest dollar): ");
+    System.out.println("Maximum cost you are able to pay per session (estimate to the nearest dollar): ");
     int maxCost = scan.nextInt();
 
-    System.out.println("Highest preferred therapist qualification\n" +
-            "(Master/PhD/PsyD): ");
+    System.out.println("Highest preferred therapist qualification (Master/PhD/PsyD): ");
     String prefQualification = scan.nextLine();
 
     System.out.println("Require therapist to accept insurance (Y/N): ");
@@ -89,7 +86,7 @@ public class UI {
 
     int prefStyle = 0;
 
-    User newUser = new User(fName, lName, username, password, dob, gender, email, zipCode,
+    User newUser = new User(lName, fName, username, password, email, gender, dob, zipCode,
             insurance, maladies, maxDistance, prefGender, maxCost, prefQualification,
             needsInsurance, prefStyle);
     return newUser;
@@ -98,9 +95,9 @@ public class UI {
   private List<String> getMaladies() {
     List<String> maladies = new ArrayList<>();
     System.out.println("Therapists help clients with a diverse set of experiences, including:\n" +
-            "1.Addiction  2.Anorexia  3.Anxiety 4.Bipolar 5.Career 6.Dementia 7.Depression" +
+            "1.Addiction  2.Anorexia  3.Anxiety 4.Bipolar 5.Career 6.Dementia 7.Depression\n" +
             "8.Disordered eating 9.Grief  10.OCD  11.PTSD 12.Relationship  13.Schizophrenia\n" +
-            "14.Self-exploration  15.Self-harm  16.Sexuality  17.Stress 18.Other\n" +
+            "14.Self-exploration  15.Self-harm  16.Sexuality  17.Stress 18.Other\n\n" +
             "You may discuss as many of these experiences as you would like with your\n" +
             "therapist.  Enter your responses one at a time.");
     String response = "";
@@ -172,8 +169,46 @@ public class UI {
     return maladies;
   }
 
+//  private User returningUser() {
+//
+//  }
+
+  public void displayMatches() {
+    System.out.println("Here are your top matches: ");
+    List<Therapist> matches = api.getMatches(this.user);
+    for (Therapist therapist : matches) {
+      System.out.println(therapist.toString());
+    }
+  }
+
+  public void rateTherapist() {
+    System.out.println("Enter the last name of the therapist you would like to rate: ");
+    String lName = scan.nextLine();
+    System.out.println("Enter the first name of the therapist you would like to rate: ");
+    String fName = scan.nextLine();
+
+    // Therapist therapist = api.getTherapist(lName, fName);
+    System.out.println("Would not recommend 1   2   3   4   5 Strongly recommend");
+
+    System.out.println("Follow the scale above to enter a rating for " + fName + " " + lName + ":");
+    int rating = scan.nextInt();
+
+    //api.insertRating(this.user, therapist, rating);
+    System.out.println("Thank you for adding your rating!");
+  }
+
+  public void deleteAccount() {
+    System.out.println("Are you sure your want to delete your account? (Y/N): ");
+    String response = scan.nextLine();
+    if (response.equals("Y")) {
+      //api.deleteUser(this.user);
+      System.out.println("Your account has been deleted.");
+      System.exit(0);
+    }
+  }
+
   // Menu
-    // Get matches
+    // Display matches
     // Rate therapist
     // Retake questionnaire
     // Delete account
