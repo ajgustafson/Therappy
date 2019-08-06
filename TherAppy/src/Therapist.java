@@ -57,17 +57,60 @@ public class Therapist {
    * @param style         therapy style
    * @param qualification highest degree held
    */
-  public Therapist(int ID, String lastName, String firstName, Date dob, String gender, String phoneNumber, String zipCode,
-                   int cost, String style, String qualification) {
+  public Therapist(int ID, String firstName, String lastName, Date dob, String gender,
+                   String email, String phoneNumber, String zipCode,
+                   float cost, String style, String qualification) {
     this.therapistID = ID;
     this.firstName = firstName;
     this.lastName = lastName;
     this.dob = dob;
     this.gender = gender;
+    this.email = email;
+    this.phoneNumber = phoneNumber;
     this.zipCode = zipCode;
     this.costPerSession = cost;
     this.style = style;
     this.qualification = qualification;
+  }
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
+
+  public Date getDOB() {
+    return dob;
+  }
+
+  public String getGender() {
+    return gender;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
+
+  public String getZipCode() {
+    return zipCode;
+  }
+
+  public float getCostPerSession() {
+    return costPerSession;
+  }
+
+  public String getStyle() {
+    return style;
+  }
+
+  public String getQualification() {
+    return qualification;
   }
 
   @Override

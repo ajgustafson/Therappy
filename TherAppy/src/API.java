@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -129,24 +130,47 @@ public class API implements TherAppyAPI {
 
   }
 
+  /**
+   * Check the password for a given user.
+   *
+   * @param user     User to login with given password
+   * @param password to authenticate
+   */
+  @Override
+  public void checkPassword(User user, String password) {
+
+  }
+
+  /**
+   * Delete user from the database.
+   *
+   * @param user to delete from database
+   */
+  @Override
+  public void deleteUser(User user) {
+
+  }
+
   @Override
   public void authenticate(String user, String password) {
 
     dbutil = new DBUtils("jdbc:mysql://localhost:3306/therappy", user, password);
   }
 
-  public void filterTherapistMatches(User user) throws IOException, SQLException {
+  public List<Therapist> filterTherapistMatches(User user) throws IOException, SQLException {
 
-    List<Therapist> therapists = new ArrayList<>();
+    List<Therapist> therapists = new LinkedList<>();
+    List<Therapist> filteredTherapists = new ArrayList<>();
 
     // Get the zip codes from the URL
     InputStream in = new URL("https://www.zipcodeapi.com/rest/" +
-            "hYoS9BQmhj6fALZMB01LzPmHXlwv6AKAua1gMD39RjY6UhdkDqhYg94a7VcVuYVk/" +
+            "KDe6INhlPqfkMh3ze6pnV3SGC2xLBN9crWuNmsWZWkIi4Kwr4OxKLvg1wvSKZ9Aw/" +
             "radius.csv/" + user.getZipCode() + "/5/mile").openStream();
 
     // prepare to parse the data
     Scanner scanner = new Scanner(in);
     List<Integer> zips = new ArrayList<>();
+
 
     // ignore the header line
     String line = scanner.nextLine();
@@ -157,6 +181,7 @@ public class API implements TherAppyAPI {
       zips.add(Integer.parseInt(line.split(",")[0]));
     }
 
+
     Connection connection = dbutil.getConnection();
 
     CallableStatement stmt = connection.prepareCall("{call findMatchingTherapists(?)}");
@@ -166,16 +191,26 @@ public class API implements TherAppyAPI {
 
     ResultSet rs = stmt.getResultSet();
 
+
     while (rs.next() != false) {
       therapists.add(new Therapist(rs.getInt("therapist_id"),
               rs.getString("first_name"), rs.getString("last_name"),
               rs.getDate("dob"), rs.getString("gender"),
               rs.getString("email"), rs.getString("phone_number"),
-              rs.getInt("zipcode"), rs.getInt("cost_per_session"),
-              rs.getInt("style_id"), rs.getInt("qualification_id")));
+              rs.getString("zipcode"), rs.getFloat("cost_per_session"),
+              rs.getString("style_id"), rs.getString("qualification_id")));
     }
 
+    for (Therapist therapist : therapists) {
+      if (zips.contains(Integer.parseInt(therapist.getZipCode()))) {
+        filteredTherapists.add(therapist);
+      }
+    }
 
+    if (filteredTherapists.size() == 0) {
+      return therapists;
+    }
+    return filteredTherapists;
   }
 
 
