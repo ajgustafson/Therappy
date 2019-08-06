@@ -1,4 +1,4 @@
-import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
@@ -33,9 +33,25 @@ public class UI {
     System.out.println("New username: ");
     String username = scan.nextLine();
 
-    System.out.println("Month of birthdate: ");
-    String month = scan.nextLine();
-    scan.useDelimiter("/");
+    System.out.println("Birthdate (MM-DD-YYY): ");
+    String birthdate = scan.nextLine();
+
+    SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+    try {
+      Date dob = sdf.parse(birthdate);
+    } catch (ParseException e) {
+      System.out.println("Birthdate error.");
+    }
+
+    System.out.println("Gender (F/M): ");
+    String gender = scan.nextLine();
+
+    System.out.println("Email: ");
+    String email = scan.nextLine();
+
+    System.out.println("Zip code: ");
+    String zipCode = 
+
 
 
     User newUser = new User();
