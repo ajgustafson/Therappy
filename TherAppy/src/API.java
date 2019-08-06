@@ -164,7 +164,7 @@ public class API implements TherAppyAPI {
 
     // Get the zip codes from the URL
     InputStream in = new URL("https://www.zipcodeapi.com/rest/" +
-            "KDe6INhlPqfkMh3ze6pnV3SGC2xLBN9crWuNmsWZWkIi4Kwr4OxKLvg1wvSKZ9Aw/" +
+            "WnU4UL8yVFW53jd6dlYQZahLb7oWBo060YiW8o6w11pHDAd4L5dcRXEiDF5ZHkqv/" +
             "radius.csv/" + user.getZipCode() + "/5/mile").openStream();
 
     // prepare to parse the data
