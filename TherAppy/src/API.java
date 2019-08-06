@@ -108,36 +108,14 @@ public class API implements TherAppyAPI {
 
 
   /**
-   * Get a list of therapists that match a user.
-   *
-   * @param user user to match with therapists
-   * @return list of therapists that match with given user
-   */
-  @Override
-  public List<Therapist> getMatches(User user) {
-    return null;
-  }
-
-  /**
-   * Insert a user's rating for a given therapist into the database.
-   *
-   * @param user      user who rated given therapist
-   * @param therapist therapist who the given user rated
-   * @param rating    rating user gave therapist
-   */
-  @Override
-  public void insertRating(User user, Therapist therapist, int rating) {
-
-  }
-
-  /**
    * Check the password for a given user.
    *
-   * @param user     User to login with given password
+   * @param username  User to login with given password
    * @param password to authenticate
+   * @return true if username and password match, false otherwise
    */
   @Override
-  public void checkPassword(User user, String password) {
+  public boolean checkPassword(String username, String password) {
 
   }
 
@@ -157,7 +135,7 @@ public class API implements TherAppyAPI {
     dbutil = new DBUtils("jdbc:mysql://localhost:3306/therappy", user, password);
   }
 
-  public List<Therapist> filterTherapistMatches(User user) throws IOException, SQLException {
+  public List<Therapist> getMatches(User user) throws IOException, SQLException {
 
     List<Therapist> therapists = new LinkedList<>();
     List<Therapist> filteredTherapists = new ArrayList<>();

@@ -40,8 +40,7 @@ public class UI {
 
     if (response.equals("N")) {
       this.user = newUser();
-    }
-    else {
+    } else {
       // this.user = getUser();
     }
   }
@@ -120,7 +119,7 @@ public class UI {
       System.out.println("Enter the number for one experience you would like to discuss\n" +
               "with your therapist (if you are finished adding experiences, enter '0'): ");
       response = scan.nextLine();
-      switch(response) {
+      switch (response) {
         case "0":
           break;
         case "1":
@@ -184,14 +183,16 @@ public class UI {
     return maladies;
   }
 
-//  private User returningUser() {
-//    System.out.println("Enter your username: ");
-//    String username = scan.nextLine();
-//    System.out.println("Enter your password: ");
-//    String password = scan.nextLine();
-//
-//    this.user = api.getUser(username, password);
-//  }
+  private User returningUser() {
+    System.out.println("Enter your username: ");
+    String username = scan.nextLine();
+    System.out.println("Enter your password: ");
+    String password = scan.nextLine();
+
+    if (api.checkPassword(username, password)) {
+    }
+
+  }
 
   public void displayMenu() {
     String response;

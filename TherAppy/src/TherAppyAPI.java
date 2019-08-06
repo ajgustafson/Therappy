@@ -50,37 +50,22 @@ public interface TherAppyAPI {
   void insertTherapistRating(User user, int therapistID, int rating);
 
   /**
-   * Get a list of therapists that match a user.
-   *
-   * @param user user to match with therapists
-   * @return list of therapists that match with given user
-   */
-  List<Therapist> getMatches(User user);
-
-  /**
    * Get a filtered list of therapists by given user's zip-code
    *
    * @param user user to filter based on their zip-code
    * @return a list of therapists within the user's radius of 5 miles
    */
-  List<Therapist> filterTherapistMatches(User user) throws IOException, SQLException;
+  List<Therapist> getMatches(User user) throws IOException, SQLException;
 
-  /**
-   * Insert a user's rating for a given therapist into the database.
-   *
-   * @param user      user who rated given therapist
-   * @param therapist therapist who the given user rated
-   * @param rating    rating user gave therapist
-   */
-  void insertRating(User user, Therapist therapist, int rating);
 
   /**
    * Check the password for a given user.
    *
-   * @param user     User to login with given password
+   * @param username     User to login with given password
    * @param password to authenticate
+   * @return true if username and password match, false otherwise
    */
-  void checkPassword(User user, String password);
+  boolean checkPassword(String username, String password);
 
   /**
    * Delete user from the database.
