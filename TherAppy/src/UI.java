@@ -42,7 +42,7 @@ public class UI {
       this.user = newUser();
     }
     else {
-      // this.user = returning User();
+      // this.user = getUser();
     }
   }
 
@@ -185,7 +185,12 @@ public class UI {
   }
 
 //  private User returningUser() {
+//    System.out.println("Enter your username: ");
+//    String username = scan.nextLine();
+//    System.out.println("Enter your password: ");
+//    String password = scan.nextLine();
 //
+//    this.user = api.getUser(username, password);
 //  }
 
   public void displayMenu() {
