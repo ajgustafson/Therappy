@@ -4,6 +4,21 @@ import java.util.Scanner;
 
 import JDBC_utils.DBUtils;
 
+
+// New user
+  // Fill out questionnaire
+  // Display menu
+
+// Returning user
+  // Display menu
+
+// Menu
+  // Display matches
+  // Rate therapist
+  // Delete account
+  // Logout
+
+
 public class UI {
   DBUtils db = new DBUtils("jdbc:mysql://localhost:3306/Therappy?serverTimezone=EST5EDT",
           "therappy", "therappyproject!");
@@ -173,7 +188,46 @@ public class UI {
 //
 //  }
 
-  public void displayMatches() {
+  public void displayMenu() {
+    String response;
+    boolean quit = false;
+    while (!quit) {
+      response = getMenuAction();
+      switch (response) {
+        case "1":
+          displayMatches();
+          break;
+        case "2":
+          rateTherapist();
+          break;
+        case "3":
+          deleteAccount();
+          quit = true;
+          break;
+        case "4":
+          logout();
+          quit = true;
+          break;
+      }
+    }
+  }
+
+  private String getMenuAction() {
+    String response = "";
+    while (!response.equals("1") && !response.equals("2")
+            && !response.equals("3") && !response.equals("4")) {
+      System.out.println("What would you like to do?\n" +
+              "1.See my therapist matches\n" +
+              "2.Rate a therapist\n" +
+              "3.Delete my account\n" +
+              "4.Logout\n" +
+              "Enter the number that matches your preference: ");
+      response = scan.nextLine();
+    }
+    return response;
+  }
+
+  private void displayMatches() {
     System.out.println("Here are your top matches: ");
     List<Therapist> matches = api.getMatches(this.user);
     for (Therapist therapist : matches) {
@@ -181,7 +235,7 @@ public class UI {
     }
   }
 
-  public void rateTherapist() {
+  private void rateTherapist() {
     System.out.println("Enter the last name of the therapist you would like to rate: ");
     String lName = scan.nextLine();
     System.out.println("Enter the first name of the therapist you would like to rate: ");
@@ -197,7 +251,7 @@ public class UI {
     System.out.println("Thank you for adding your rating!");
   }
 
-  public void deleteAccount() {
+  private void deleteAccount() {
     System.out.println("Are you sure your want to delete your account? (Y/N): ");
     String response = scan.nextLine();
     if (response.equals("Y")) {
@@ -207,18 +261,8 @@ public class UI {
     }
   }
 
-  // Menu
-    // Display matches
-    // Rate therapist
-    // Retake questionnaire
-    // Delete account
-    // Logout
-
-  // New user
-    // Fill out questionnaire
-    // Display menu
-
-  // Returning user
-    // Display menu
-
+  private void logout() {
+    this.user = null;
+    System.out.println("You have been logged out.  See you next time!");
+  }
 }
