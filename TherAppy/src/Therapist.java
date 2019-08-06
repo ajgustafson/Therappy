@@ -57,7 +57,7 @@ public class Therapist {
    * @param style         therapy style
    * @param qualification highest degree held
    */
-  public Therapist(int ID, String lastName, String firstName, String gender, Date dob, String zipCode,
+  public Therapist(int ID, String lastName, String firstName, Date dob, String gender, String phoneNumber, String zipCode,
                    int cost, String style, String qualification) {
     this.therapistID = ID;
     this.firstName = firstName;
