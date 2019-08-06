@@ -88,7 +88,7 @@ public interface TherAppyAPI {
    * @param user to delete from database
    */
   void deleteUser(User user);
-  
+
   /**
    * Set connection settings
    */
