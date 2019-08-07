@@ -130,7 +130,7 @@ public class API implements TherAppyAPI {
    */
   @Override
   public void deleteUser(String username) {
-     String delete_sql = "call delete_user('" + username + ")";
+     String delete_sql = "call delete_user('" + username + "')";
     dbutil.insertOneRecord(delete_sql);
   }
 
