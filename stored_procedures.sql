@@ -383,6 +383,80 @@ DELETE
 end //
 delimiter ;
 
+-- Procedure to get a user's zipcode from their username
+drop procedure if exists get_user_zipcode;
+
+delimiter //
+create procedure get_user_zipcode
+(
+	in username_param VARCHAR(50)
+)
+begin
+    SELECT zipcode FROM user WHERE username = username_param;
+
+end //
+delimiter ;
+
+-- Procedure to get a user's zipcode from their username
+drop procedure if exists get_user_email;
+
+delimiter //
+create procedure get_user_email
+(
+	in username_param VARCHAR(50)
+)
+begin
+    SELECT email FROM user WHERE username = username_param;
+        
+end //
+delimiter ;
+
+-- Procedure to get therapist ID
+drop procedure if exists get_therapist_id;
+
+delimiter //
+create procedure get_therapist_id
+(
+	in first_name_param VARCHAR(50),
+    in last_name_param VARCHAR(50)
+)
+begin
+	DECLARE therapist_id_var INT;
+    
+    SELECT therapist_id INTO therapist_id_var 
+    FROM therapist 
+    WHERE first_name = first_name_param AND last_name = last_name_param;
+    
+    SELECT therapist_id_var;
+        
+end //
+delimiter ;
+
+-- Procedure to validate password for existing user
+drop procedure if exists validate_user;
+
+delimiter //
+create procedure validate_user
+(
+	in username_param VARCHAR(50),
+    in password_param VARCHAR(20)
+)
+begin
+	DECLARE password_actual_var VARCHAR(20);
+    DECLARE result TINYINT;
+    
+    SELECT pwd INTO password_actual_var FROM user WHERE username = username_param;
+    
+    IF (password_param = password_actual_var)
+    THEN SET result = 1;
+    ELSE SET result = 0;
+    END IF;
+    
+    SELECT result;
+	
+end //
+delimiter ;
+
 
 
 
@@ -412,3 +486,9 @@ select * from user;
 call findMatchingTherapists('gwickman8@abc.net.au');
 
 call findMatchingTherapists('kthorpc@mac.com');
+
+call get_user_email('juni', @val);
+
+call validate_user('juni', 'bla');
+
+call get_therapist_id('Shelton', 'Halifax');

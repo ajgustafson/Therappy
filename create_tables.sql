@@ -47,7 +47,7 @@ CREATE TABLE user (
 	user_id INT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
-    username VARCHAR(50) NOT NULL,
+    username VARCHAR(50) NOT NULL UNIQUE,
     pwd VARCHAR(20) NOT NULL,
     dob DATE,
     gender ENUM('F', 'M'),
