@@ -75,6 +75,7 @@ public class UI {
     return response;
   }
 
+  //TODO Validate user input????
   /**
    * Register a new user.  Collect all information about user including identification info, and
    * therapist preference info.  Send all info to database interface.
@@ -124,7 +125,6 @@ public class UI {
             "dollar): ");
     int maxCost = Integer.parseInt(scan.nextLine());
 
-    //TODO something about this isn't correct (shows up as null in the database)
     System.out.println("Highest preferred therapist qualification (MA/PhD/PsyD/None): ");
     String prefQualification = scan.nextLine();
 
@@ -228,6 +228,7 @@ public class UI {
           String other = scan.nextLine();
           maladies.add(other);
           break;
+        //TODO default?? WHat if the user types a number other than 1-18?
       }
     }
     return maladies;
