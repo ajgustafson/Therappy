@@ -345,6 +345,51 @@ begin
 end //
 delimiter ;
 
+-- Procedure to delete user from the database				
+				
+drop procedure if exists delete_user;
+
+delimiter //
+create procedure delete_user
+(
+	in username_param varchar(255)
+)
+begin
+declare user_id_var int;
+
+select user_id into user_id_var from user where username = username_param;
+
+delete
+ from user_exhibits_malady
+ where user_id = user_id_var;
+ 
+ delete
+ from user_makes_choices
+  where user_id = user_id_var;
+  
+  delete
+  from  user_matches_therapist
+   where user_id = user_id_var;
+   
+   delete
+  from user_rates_therapist
+  where user_id = user_id_var;
+
+
+DELETE
+ FROM user
+ where username = username_param;
+
+end //
+delimiter ;
+
+
+
+
+
+
+
+
 
 -- ------------------ TESTS ------------------
 
