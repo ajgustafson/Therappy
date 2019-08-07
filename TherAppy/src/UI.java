@@ -112,13 +112,13 @@ public class UI {
     List<String> maladies = getMaladies();
 
     System.out.println("Maximum distance you would like to travel to meet with your therapist (estimate to the nearest mile): ");
-    int maxDistance = scan.nextInt();
+    int maxDistance = Integer.parseInt(scan.nextLine());
 
     System.out.println("Preferred therapist gender (F/M): ");
     String prefGender = scan.nextLine();
 
     System.out.println("Maximum cost you are able to pay per session (estimate to the nearest dollar): ");
-    int maxCost = scan.nextInt();
+    int maxCost = Integer.parseInt(scan.nextLine());
 
     System.out.println("Highest preferred therapist qualification (Master/PhD/PsyD): ");
     String prefQualification = scan.nextLine();
@@ -294,6 +294,7 @@ public class UI {
     String choice = "";
     while (!choice.equals("1") && !choice.equals("2") && !choice.equals("3")) {
       System.out.println("Enter the number for the choice that best represents your preference: ");
+      choice = scan.nextLine();
     }
     return choice;
   }
