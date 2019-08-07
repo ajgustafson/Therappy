@@ -28,7 +28,7 @@ public class apiTest {
 
 
     try {
-      List<Therapist> therapists = api.filterTherapistMatches(testUser);
+      List<Therapist> therapists = api.getMatches(testUser);
       for (Therapist therapist : therapists) {
         System.out.println(therapist);
       }
