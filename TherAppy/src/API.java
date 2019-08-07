@@ -97,13 +97,20 @@ public class API implements TherAppyAPI {
    * FIXME - this method updated by Jeff and Mukhi on 8/1 Method to insert a user's rating of a
    * therapist into the database
    *
-   * @param user        User who rates the therapist
+   * @param username    User who rates the therapist
    * @param therapistID ID of the therapist that was rated
    * @param rating      rating the user gave to the therapist
    */
   @Override
-  public void insertTherapistRating(User user, int therapistID, int rating) {
-    String user_rates_therapist_sql = "call insert_therapist_rating('" + user.getEmail() +
+  public void insertTherapistRating(String username, int therapistID, int rating) {
+    String email = null;
+    try {
+      email = getUserEmail(username);
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+
+    String user_rates_therapist_sql = "call insert_therapist_rating('" + email +
             "'," + therapistID + "," + rating + ")";
     dbutil.insertOneRecord(user_rates_therapist_sql);
   }
@@ -161,9 +168,21 @@ public class API implements TherAppyAPI {
    * @return given therapist's ID number
    */
   @Override
-  public int getTherapistID(String firstName, String lastName) {
-    // TODO implement this
-    return 0;
+  public int getTherapistID(String firstName, String lastName) throws SQLException {
+    Connection connection = dbutil.getConnection();
+
+    CallableStatement stmt = connection.prepareCall("{call get_therapist_id(?, ?)}");
+
+    stmt.setString(1, firstName);
+    stmt.setString(2, lastName);
+    stmt.execute();
+
+    ResultSet rs = stmt.getResultSet();
+    String result = "";
+    while (rs.next() != false) {
+      result = rs.getString("therapist_id_var");
+    }
+    return Integer.parseInt(result);
   }
 
   @Override

@@ -3,19 +3,16 @@
   <component name="ChangeListManager">
     <list default="true" id="e460609e-2356-4745-804c-3eef5aa54368" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TherAppy.iml" beforeDir="false" afterPath="$PROJECT_DIR$/TherAppy.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/TherAppy/API.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TherAppy/API.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TherAppy/Driver.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TherAppy/Driver.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/TherAppy/Driver.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/TherAppy/TherAppyAPI.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TherAppy/TherAppyAPI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TherAppy/Therapist.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TherAppy/Therapist.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/TherAppy/UI.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TherAppy/UI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TherAppy/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TherAppy/User.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/TherAppy/UITest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/TherAppy/UITest.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/API.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/API.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Driver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/TherAppyAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/TherAppyAPI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/UITest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/UITest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/apiTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/apiTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../create_tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../create_tables.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../stored_procedures.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../stored_procedures.sql" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -27,11 +24,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/UI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4755">
-              <caret line="317" column="8" selection-start-line="317" selection-start-column="8" selection-end-line="317" selection-end-column="8" />
+            <state relative-caret-position="184">
+              <caret line="151" column="72" selection-start-line="151" selection-start-column="72" selection-end-line="151" selection-end-column="72" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -51,8 +48,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/TherAppyAPI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="67" column="77" selection-start-line="67" selection-start-column="77" selection-end-line="67" selection-end-column="77" />
+            <state relative-caret-position="142">
+              <caret line="45" column="24" selection-start-line="45" selection-start-column="24" selection-end-line="45" selection-end-column="24" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -63,12 +60,12 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/API.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="66">
-              <caret line="122" column="77" selection-start-line="122" selection-start-column="77" selection-end-line="122" selection-end-column="77" />
+            <state relative-caret-position="150">
+              <caret line="109" column="39" selection-start-line="109" selection-start-column="39" selection-end-line="109" selection-end-column="39" />
               <folding>
                 <element signature="e#431#432#0" expanded="true" />
                 <element signature="e#461#462#0" expanded="true" />
-                <element signature="e#8658#8659#0" expanded="true" />
+                <element signature="e#9207#9208#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -107,11 +104,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/UITest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="88">
-              <caret line="11" column="6" selection-start-line="8" selection-end-line="11" selection-end-column="6" />
+            <state relative-caret-position="105">
+              <caret line="7" selection-start-line="7" selection-end-line="11" selection-end-column="25" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -122,8 +119,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Driver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-49">
-              <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+            <state relative-caret-position="107">
+              <caret line="45" column="42" lean-forward="true" selection-start-line="45" selection-start-column="42" selection-end-line="45" selection-end-column="42" />
             </state>
           </provider>
         </entry>
@@ -151,10 +148,11 @@
         <option value="$PROJECT_DIR$/src/Therapist.java" />
         <option value="$PROJECT_DIR$/src/User.java" />
         <option value="$PROJECT_DIR$/test/apiTest.java" />
-        <option value="$PROJECT_DIR$/src/TherAppyAPI.java" />
         <option value="$PROJECT_DIR$/src/API.java" />
-        <option value="$PROJECT_DIR$/src/UI.java" />
+        <option value="$PROJECT_DIR$/src/TherAppyAPI.java" />
         <option value="$PROJECT_DIR$/test/UITest.java" />
+        <option value="$PROJECT_DIR$/src/Driver.java" />
+        <option value="$PROJECT_DIR$/src/UI.java" />
       </list>
     </option>
   </component>
@@ -208,7 +206,7 @@
     <property name="Repository.Attach.Sources" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1565214856003" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1565218850489" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="Libraries" />
@@ -252,12 +250,12 @@
       <option name="presentableId" value="Default" />
       <updated>1563734988436</updated>
       <workItem from="1563734992363" duration="874000" />
-      <workItem from="1565105753929" duration="21204000" />
+      <workItem from="1565105753929" duration="22990000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30223000" />
+    <option name="totallyTimeSpent" value="32009000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -270,6 +268,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="289" y="23" width="975" height="705" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27116826" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -278,7 +277,7 @@
       <window_info id="Designer" order="4" />
       <window_info id="UI Designer" order="5" />
       <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" order="0" weight="0.2369863" />
+      <window_info anchor="bottom" id="Messages" order="0" weight="0.2365416" />
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="Find" order="2" />
       <window_info active="true" anchor="bottom" id="Run" order="3" visible="true" weight="0.36215335" />
@@ -351,13 +350,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Driver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-49">
-          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/User.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="152">
@@ -380,8 +372,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/TherAppyAPI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="67" column="77" selection-start-line="67" selection-start-column="77" selection-end-line="67" selection-end-column="77" />
+        <state relative-caret-position="142">
+          <caret line="45" column="24" selection-start-line="45" selection-start-column="24" selection-end-line="45" selection-end-column="24" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -390,30 +382,37 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/API.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="122" column="77" selection-start-line="122" selection-start-column="77" selection-end-line="122" selection-end-column="77" />
+        <state relative-caret-position="150">
+          <caret line="109" column="39" selection-start-line="109" selection-start-column="39" selection-end-line="109" selection-end-column="39" />
           <folding>
             <element signature="e#431#432#0" expanded="true" />
             <element signature="e#461#462#0" expanded="true" />
-            <element signature="e#8658#8659#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/UI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4755">
-          <caret line="317" column="8" selection-start-line="317" selection-start-column="8" selection-end-line="317" selection-end-column="8" />
-          <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#9207#9208#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/UITest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="11" column="6" selection-start-line="8" selection-end-line="11" selection-end-column="6" />
+        <state relative-caret-position="105">
+          <caret line="7" selection-start-line="7" selection-end-line="11" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Driver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="107">
+          <caret line="45" column="42" lean-forward="true" selection-start-line="45" selection-start-column="42" selection-end-line="45" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/UI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="184">
+          <caret line="151" column="72" selection-start-line="151" selection-start-column="72" selection-end-line="151" selection-end-column="72" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

@@ -15,7 +15,7 @@ public class UITest {
 //            "therappy", "therappyproject!");
 //    API api = new API(db);
 //    try {
-//      System.out.println(ui.returningUser());
+//      System.out.println(api.getTherapistID("Shelton", "Halifax"));
 //    } catch (Exception e) {
 //      System.out.println(e.getMessage());
 //    }

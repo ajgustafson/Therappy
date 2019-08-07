@@ -43,11 +43,11 @@ public interface TherAppyAPI {
    * FIXME - this method updated by Jeff and Mukhi on 8/1 Method to insert a user's rating of a
    * therapist into the database
    *
-   * @param user        User who rates the therapist
+   * @param username    User who rates the therapist
    * @param therapistID ID of the therapist that was rated
    * @param rating      rating the user gave to the therapist
    */
-  void insertTherapistRating(User user, int therapistID, int rating);
+  void insertTherapistRating(String username, int therapistID, int rating);
 
   /**
    * Get a filtered list of therapists by given user's zip-code
@@ -81,7 +81,7 @@ public interface TherAppyAPI {
    * @param lastName  of therapist
    * @return given therapist's ID number
    */
-  int getTherapistID(String firstName, String lastName);
+  int getTherapistID(String firstName, String lastName) throws SQLException;
 
   /**
    * Set connection settings

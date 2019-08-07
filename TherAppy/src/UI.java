@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +77,7 @@ public class UI {
   }
 
   //TODO Validate user input????
+
   /**
    * Register a new user.  Collect all information about user including identification info, and
    * therapist preference info.  Send all info to database interface.
@@ -148,6 +148,8 @@ public class UI {
 
     getStylePreference(newUser);
     api.updateUserStyle(newUser);
+
+    System.out.println("Great!  We have created your TherAppy account!\n");
 
     return newUser;
   }
@@ -340,23 +342,20 @@ public class UI {
    */
   public void displayHomeMenu() {
     String response;
-    boolean quit = false;
-    while (!quit) {
+    while (true) {
       response = validateMenuAction();
       switch (response) {
         case "1":
           displayMatches();
           break;
         case "2":
-//          rateTherapist();
+          rateTherapist();
           break;
         case "3":
           deleteAccount();
-          quit = true;
           break;
         case "4":
           logout();
-          quit = true;
           break;
       }
     }
@@ -398,22 +397,28 @@ public class UI {
     }
   }
 
-  // TODO I need a method to retrieve a therapist ID from their first and last name
-//  private void rateTherapist() {
-//    System.out.println("Enter the last name of the therapist you would like to rate: ");
-//    String lName = scan.nextLine();
-//    System.out.println("Enter the first name of the therapist you would like to rate: ");
-//    String fName = scan.nextLine();
-//
-//    int therapistID = api.getTherapistID(fName, lName);
-//    System.out.println("Would not recommend 1   2   3   4   5 Strongly recommend");
-//
-//    System.out.println("Follow the scale above to enter a rating for " + fName + " " + lName + ":");
-//    int rating = scan.nextInt();
-//
-//    api.insertTherapistRating(this.username, therapistID, rating);
-//    System.out.println("Thank you for adding your rating!");
-//  }
+
+  private void rateTherapist() {
+    System.out.println("Enter the last name of the therapist you would like to rate: ");
+    String lName = scan.nextLine();
+    System.out.println("Enter the first name of the therapist you would like to rate: ");
+    String fName = scan.nextLine();
+
+    int therapistID = 0;
+    try {
+      therapistID = api.getTherapistID(fName, lName);
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+    System.out.println("Would not recommend 1   2   3   4   5 Strongly recommend");
+
+    System.out.println("Follow the scale above to enter a rating for " + fName + " " + lName + ":");
+    String textRating = scan.nextLine();
+    int rating = Integer.parseInt(textRating);
+
+    api.insertTherapistRating(this.username, therapistID, rating);
+    System.out.println("Thank you for adding your rating!\n");
+  }
 
   /**
    * Validates a user's choice to delete their account and communicates with the database to delete
@@ -425,7 +430,7 @@ public class UI {
     if (response.equals("Y")) {
       api.deleteUser(this.username);
       System.out.println("Your account has been deleted.");
-      //TODO call system exit instead of "quit" in menu switch?
+      System.exit(0);
     }
   }
 
@@ -435,6 +440,6 @@ public class UI {
   private void logout() {
     this.username = null;
     System.out.println("You have been logged out.  See you next time!");
-    //TODO call system exit instead of "quit" in menu switch?
+    System.exit(0);
   }
 }

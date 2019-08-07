@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import JDBC_utils.DBUtils;
-
+/*
 public class Driver {
 
   private static DBUtils dbu;
@@ -50,4 +50,4 @@ public class Driver {
     api.updateUserStyle(u1);
     api.insertTherapistRating(u1,1001, 7);
   }
-}
+}*/
