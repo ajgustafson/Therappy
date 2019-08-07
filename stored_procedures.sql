@@ -345,7 +345,8 @@ begin
 end //
 delimiter ;
 
--- Procedure to insert the user's responses to the 5 questions at the end of the survey related to style preference.
+-- Procedure to delete user from the database				
+				
 drop procedure if exists delete_user;
 
 delimiter //
