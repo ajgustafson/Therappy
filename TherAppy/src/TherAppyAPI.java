@@ -61,7 +61,7 @@ public interface TherAppyAPI {
   /**
    * Check the password for a given user.
    *
-   * @param username     User to login with given password
+   * @param username User to login with given password
    * @param password to authenticate
    * @return true if username and password match, false otherwise
    */
@@ -70,9 +70,18 @@ public interface TherAppyAPI {
   /**
    * Delete user from the database.
    *
-   * @param user to delete from database
+   * @param username of user to delete from database
    */
-  void deleteUser(User user);
+  void deleteUser(String username);
+
+  /**
+   * Get therapist ID from a therapist's first and last name
+   *
+   * @param firstName of therapist
+   * @param lastName  of therapist
+   * @return given therapist's ID number
+   */
+  int getTherapistID(String firstName, String lastName);
 
   /**
    * Set connection settings

@@ -92,6 +92,7 @@ public class API implements TherAppyAPI {
 
   }
 
+
   /**
    * FIXME - this method updated by Jeff and Mukhi on 8/1 Method to insert a user's rating of a
    * therapist into the database
@@ -100,6 +101,7 @@ public class API implements TherAppyAPI {
    * @param therapistID ID of the therapist that was rated
    * @param rating      rating the user gave to the therapist
    */
+  @Override
   public void insertTherapistRating(User user, int therapistID, int rating) {
     String user_rates_therapist_sql = "call insert_therapist_rating('" + user.getEmail() +
             "'," + therapistID + "," + rating + ")";
@@ -116,17 +118,33 @@ public class API implements TherAppyAPI {
    */
   @Override
   public boolean checkPassword(String username, String password) {
-
+    //TODO implement this
+    return false;
   }
+
 
   /**
    * Delete user from the database.
    *
-   * @param user to delete from database
+   * @param username of user to delete from database
    */
   @Override
-  public void deleteUser(User user) {
+  public void deleteUser(String username) {
+    //TODO implement this
+  }
 
+
+  /**
+   * Get therapist ID from a therapist's first and last name
+   *
+   * @param firstName of therapist
+   * @param lastName  of therapist
+   * @return given therapist's ID number
+   */
+  @Override
+  public int getTherapistID(String firstName, String lastName) {
+    // TODO implement this
+    return 0;
   }
 
   @Override

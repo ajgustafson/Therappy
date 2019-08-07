@@ -6,42 +6,61 @@ import JDBC_utils.DBUtils;
 
 
 // New user
-  // Fill out questionnaire
-  // Display menu
+// Fill out questionnaire
+// Display menu
 
 // Returning user
-  // Display menu
+// Display menu
 
 // Menu
-  // Display matches
-  // Rate therapist
-  // Delete account
-  // Logout
+// Display matches
+// Rate therapist
+// Delete account
+// Logout
 
 
 public class UI {
   DBUtils db = new DBUtils("jdbc:mysql://localhost:3306/Therappy?serverTimezone=EST5EDT",
           "therappy", "therappyproject!");
   API api = new API(db);
-  User user;
+  String username = null;
   Scanner scan = new Scanner(System.in);
 
-  public void setUser() {
+  private String displayWelcomeMenu() {
     System.out.println("Welcome to TherAppy!");
 
     String response = "";
 
-    while (!response.equals("N") && !response.equals("R")) {
+    while (!response.equals("N") && !response.equals("R") && !response.equals("E")) {
       System.out.println("New user?  Type: N");
       System.out.println("Returning user? Type: R");
+      System.out.println("Exit? Type: E");
       response = scan.nextLine();
       response = response.toUpperCase();
     }
 
-    if (response.equals("N")) {
-      this.user = newUser();
-    } else {
-      // this.user = getUser();
+    return response;
+  }
+
+  public void setUser() {
+    String response;
+    while (this.username == null) {
+      response = displayWelcomeMenu();
+
+      if (response.equals("E")) {
+        System.out.println("Goodbye!");
+        System.exit(0);
+      }
+      else if (response.equals("N")) {
+        User user = newUser();
+        this.username = user.getUsername();
+      } else {
+        try {
+          this.username = returningUser();
+        } catch (IllegalStateException e) {
+          System.out.println(e.getMessage());
+        }
+      }
     }
   }
 
@@ -183,18 +202,28 @@ public class UI {
     return maladies;
   }
 
-  private User returningUser() {
+  /**
+   * Get and authenticate returning user's username and password.  Return username if
+   * authenticated.
+   *
+   * @return username of authenticated returning user
+   * @throws IllegalStateException if username and password cannot be authenticated
+   */
+  private String returningUser() throws IllegalStateException {
     System.out.println("Enter your username: ");
     String username = scan.nextLine();
     System.out.println("Enter your password: ");
     String password = scan.nextLine();
 
     if (api.checkPassword(username, password)) {
+      return username;
+    } else {
+      throw new IllegalStateException("Username and password not found.\nYou may try to log in " +
+              "again from the main menu.");
     }
-
   }
 
-  public void displayMenu() {
+  public void displayHomeMenu() {
     String response;
     boolean quit = false;
     while (!quit) {
@@ -235,7 +264,7 @@ public class UI {
 
   private void displayMatches() {
     System.out.println("Here are your top matches: ");
-    List<Therapist> matches = api.getMatches(this.user);
+    List<Therapist> matches = api.getMatches(this.username);
     for (Therapist therapist : matches) {
       System.out.println(therapist.toString());
     }
@@ -247,13 +276,13 @@ public class UI {
     System.out.println("Enter the first name of the therapist you would like to rate: ");
     String fName = scan.nextLine();
 
-    // Therapist therapist = api.getTherapist(lName, fName);
+    int therapistID = api.getTherapistID(fName, lName);
     System.out.println("Would not recommend 1   2   3   4   5 Strongly recommend");
 
     System.out.println("Follow the scale above to enter a rating for " + fName + " " + lName + ":");
     int rating = scan.nextInt();
 
-    //api.insertRating(this.user, therapist, rating);
+    api.insertTherapistRating(this.username, therapistID, rating);
     System.out.println("Thank you for adding your rating!");
   }
 
@@ -261,14 +290,13 @@ public class UI {
     System.out.println("Are you sure your want to delete your account? (Y/N): ");
     String response = scan.nextLine();
     if (response.equals("Y")) {
-      //api.deleteUser(this.user);
+      api.deleteUser(this.username);
       System.out.println("Your account has been deleted.");
-      System.exit(0);
     }
   }
 
   private void logout() {
-    this.user = null;
+    this.username = null;
     System.out.println("You have been logged out.  See you next time!");
   }
 }
