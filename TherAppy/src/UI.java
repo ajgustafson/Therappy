@@ -94,7 +94,7 @@ public class UI {
     System.out.println("New password: ");
     String password = scan.nextLine();
 
-    System.out.println("Birthdate (MM-DD-YYY): ");
+    System.out.println("Birthdate (YYYY-MM-DD): ");
     String dob = scan.nextLine();
 
     System.out.println("Gender (F/M): ");
@@ -242,26 +242,26 @@ public class UI {
             "happens");
     choice = validateStyleChoice();
     if (choice.equals("1")) {
-      api.insertStylePrefResponse(user, 1);
+      api.insertStylePrefResponse(user, 40000);
     } else if (choice.equals("2")) {
-      api.insertStylePrefResponse(user, 2);
+      api.insertStylePrefResponse(user, 40001);
     }
 
     System.out.println("1.I am action oriented -- 2.No preference -- 3.I like to talk about my " +
             "problems");
     choice = validateStyleChoice();
     if (choice.equals("1")) {
-      api.insertStylePrefResponse(user, 3);
+      api.insertStylePrefResponse(user, 40002);
     } else if (choice.equals("2")) {
-      api.insertStylePrefResponse(user, 4);
+      api.insertStylePrefResponse(user, 40003);
     }
 
     System.out.println("1.I like structure -- 2.No preference -- 3.I like fluidity");
     choice = validateStyleChoice();
     if (choice.equals("1")) {
-      api.insertStylePrefResponse(user, 5);
+      api.insertStylePrefResponse(user, 40004);
     } else if (choice.equals("2")) {
-      api.insertStylePrefResponse(user, 6);
+      api.insertStylePrefResponse(user, 40005);
     }
 
     System.out.println("1.I am willing to do work outside of sessions\n" +
@@ -269,9 +269,9 @@ public class UI {
             "3.I want all my work to be done with my therapist");
     choice = validateStyleChoice();
     if (choice.equals("1")) {
-      api.insertStylePrefResponse(user, 7);
+      api.insertStylePrefResponse(user, 40006);
     } else if (choice.equals("2")) {
-      api.insertStylePrefResponse(user, 8);
+      api.insertStylePrefResponse(user, 40007);
     }
 
     System.out.println("1.I like to be asked questions\n" +
@@ -279,9 +279,9 @@ public class UI {
             "3.I prefer to talk about what is on my mind");
     choice = validateStyleChoice();
     if (choice.equals("1")) {
-      api.insertStylePrefResponse(user, 9);
+      api.insertStylePrefResponse(user, 40008);
     } else if (choice.equals("2")) {
-      api.insertStylePrefResponse(user, 10);
+      api.insertStylePrefResponse(user, 40009);
     }
   }
 
