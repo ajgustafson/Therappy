@@ -29,7 +29,9 @@ public class UI {
   String username = null;
   Scanner scan = new Scanner(System.in);
 
-
+  /**
+   * Sets the user of this session as a new or returning user.
+   */
   public void setUser() {
     String response;
     while (this.username == null) {
@@ -111,16 +113,19 @@ public class UI {
 
     List<String> maladies = getMaladies();
 
-    System.out.println("Maximum distance you would like to travel to meet with your therapist (estimate to the nearest mile): ");
+    System.out.println("Maximum distance you would like to travel to meet with your therapist " +
+            "(estimate to the nearest mile): ");
     int maxDistance = Integer.parseInt(scan.nextLine());
 
     System.out.println("Preferred therapist gender (F/M): ");
     String prefGender = scan.nextLine();
 
-    System.out.println("Maximum cost you are able to pay per session (estimate to the nearest dollar): ");
+    System.out.println("Maximum cost you are able to pay per session (estimate to the nearest " +
+            "dollar): ");
     int maxCost = Integer.parseInt(scan.nextLine());
 
-    System.out.println("Highest preferred therapist qualification (Master/PhD/PsyD): ");
+    //TODO something about this isn't correct (shows up as null in the database)
+    System.out.println("Highest preferred therapist qualification (MA/PhD/PsyD/None): ");
     String prefQualification = scan.nextLine();
 
     System.out.println("Require therapist to accept insurance (Y/N): ");
@@ -234,8 +239,9 @@ public class UI {
    * @param user answering style preference questions
    */
   private void getStylePreference(User user) {
-    System.out.println("Each therapist has a different approach to caring for your mental health.\n" +
-            "The following questions help us find therapists that best meet your needs.\n");
+    System.out.println("Each therapist has a different approach to caring for your mental " +
+            "health.\nThe following questions help us find therapists that best meet your " +
+            "needs.\n");
 
     String choice;
     System.out.println("1.I have a goal -- 2.No preference -- 3.  I am open to seeing what " +
@@ -243,7 +249,7 @@ public class UI {
     choice = validateStyleChoice();
     if (choice.equals("1")) {
       api.insertStylePrefResponse(user, 40000);
-    } else if (choice.equals("2")) {
+    } else if (choice.equals("3")) {
       api.insertStylePrefResponse(user, 40001);
     }
 
@@ -252,7 +258,7 @@ public class UI {
     choice = validateStyleChoice();
     if (choice.equals("1")) {
       api.insertStylePrefResponse(user, 40002);
-    } else if (choice.equals("2")) {
+    } else if (choice.equals("3")) {
       api.insertStylePrefResponse(user, 40003);
     }
 
@@ -260,7 +266,7 @@ public class UI {
     choice = validateStyleChoice();
     if (choice.equals("1")) {
       api.insertStylePrefResponse(user, 40004);
-    } else if (choice.equals("2")) {
+    } else if (choice.equals("3")) {
       api.insertStylePrefResponse(user, 40005);
     }
 
@@ -270,7 +276,7 @@ public class UI {
     choice = validateStyleChoice();
     if (choice.equals("1")) {
       api.insertStylePrefResponse(user, 40006);
-    } else if (choice.equals("2")) {
+    } else if (choice.equals("3")) {
       api.insertStylePrefResponse(user, 40007);
     }
 
@@ -280,7 +286,7 @@ public class UI {
     choice = validateStyleChoice();
     if (choice.equals("1")) {
       api.insertStylePrefResponse(user, 40008);
-    } else if (choice.equals("2")) {
+    } else if (choice.equals("3")) {
       api.insertStylePrefResponse(user, 40009);
     }
   }
@@ -367,7 +373,9 @@ public class UI {
     }
     return response;
   }
-//TODO fix below!
+
+
+//TODO Can getMatches take in just the username?
 
 //  private void displayMatches() {
 //    System.out.println("Here are your top matches: ");
@@ -377,6 +385,7 @@ public class UI {
 //    }
 //  }
 
+  // TODO I need a method to retrieve a therapist ID from their first and last name
 //  private void rateTherapist() {
 //    System.out.println("Enter the last name of the therapist you would like to rate: ");
 //    String lName = scan.nextLine();
