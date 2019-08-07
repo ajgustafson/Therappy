@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -313,18 +315,23 @@ public class UI {
    * @return username of authenticated returning user
    * @throws IllegalStateException if username and password cannot be authenticated
    */
-  private String returningUser() throws IllegalStateException {
+  public String returningUser() throws IllegalStateException {
     System.out.println("Enter your username: ");
     String username = scan.nextLine();
     System.out.println("Enter your password: ");
     String password = scan.nextLine();
 
-    if (api.checkPassword(username, password)) {
-      return username;
-    } else {
-      throw new IllegalStateException("Username and password not found.\nYou may try to log in " +
-              "again from the main menu.");
+    try {
+      if (api.checkPassword(username, password)) {
+        return username;
+      } else {
+        throw new IllegalStateException("Username and password not found.\nYou may try to log in " +
+                "again from the main menu.");
+      }
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
     }
+    return username;
   }
 
   /**
@@ -338,7 +345,7 @@ public class UI {
       response = validateMenuAction();
       switch (response) {
         case "1":
-//          displayMatches();
+          displayMatches();
           break;
         case "2":
 //          rateTherapist();
@@ -378,13 +385,18 @@ public class UI {
 
 //TODO Can getMatches take in just the username?
 
-//  private void displayMatches() {
-//    System.out.println("Here are your top matches: ");
-//    List<Therapist> matches = api.getMatches(this.username);
-//    for (Therapist therapist : matches) {
-//      System.out.println(therapist.toString());
-//    }
-//  }
+  public void displayMatches() {
+    List<Therapist> matches = null;
+    System.out.println("Here are your top matches: ");
+    try {
+      matches = api.getMatches(this.username);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
+    for (Therapist therapist : matches) {
+      System.out.println(therapist.toString());
+    }
+  }
 
   // TODO I need a method to retrieve a therapist ID from their first and last name
 //  private void rateTherapist() {

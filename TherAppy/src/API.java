@@ -117,9 +117,27 @@ public class API implements TherAppyAPI {
    * @return true if username and password match, false otherwise
    */
   @Override
-  public boolean checkPassword(String username, String password) {
-    //TODO implement this
-    return false;
+  public boolean checkPassword(String username, String password) throws SQLException {
+    Connection connection = dbutil.getConnection();
+
+    CallableStatement stmt = connection.prepareCall("{call validate_user(?, ?)}");
+
+    stmt.setString(1, username);
+    stmt.setString(2, password);
+    stmt.execute();
+
+    ResultSet rs = stmt.getResultSet();
+    String result = "";
+    while (rs.next() != false) {
+      result = rs.getString("result");
+    }
+
+    if (result.equals("1")) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
 
@@ -155,15 +173,18 @@ public class API implements TherAppyAPI {
   }
 
 
-  public List<Therapist> getMatches(User user) throws IOException, SQLException {
+  public List<Therapist> getMatches(String username) throws IOException, SQLException {
 
     List<Therapist> therapists = new LinkedList<>();
     List<Therapist> filteredTherapists = new ArrayList<>();
 
+    String zipCode = getUserZipCode(username);
+    String email = getUserEmail(username);
+
     // Get the zip codes from the URL
     InputStream in = new URL("https://www.zipcodeapi.com/rest/" +
             "WnU4UL8yVFW53jd6dlYQZahLb7oWBo060YiW8o6w11pHDAd4L5dcRXEiDF5ZHkqv/" +
-            "radius.csv/" + user.getZipCode() + "/5/mile").openStream();
+            "radius.csv/" + zipCode + "/5/mile").openStream();
 
     // prepare to parse the data
     Scanner scanner = new Scanner(in);
@@ -179,12 +200,10 @@ public class API implements TherAppyAPI {
       zips.add(Integer.parseInt(line.split(",")[0]));
     }
 
-
     Connection connection = dbutil.getConnection();
-
     CallableStatement stmt = connection.prepareCall("{call findMatchingTherapists(?)}");
 
-    stmt.setString(1, user.getEmail());
+    stmt.setString(1, email);
     stmt.execute();
 
     ResultSet rs = stmt.getResultSet();
@@ -205,11 +224,46 @@ public class API implements TherAppyAPI {
       }
     }
 
+    //TODO close connection?
+
     if (filteredTherapists.size() == 0) {
       return therapists;
     }
     return filteredTherapists;
   }
+
+  private String getUserZipCode(String username) throws SQLException {
+    Connection connection = dbutil.getConnection();
+
+    CallableStatement stmt = connection.prepareCall("{call get_user_zipcode(?)}");
+
+    stmt.setString(1, username);
+    stmt.execute();
+
+    ResultSet rs = stmt.getResultSet();
+    String zipCode = "";
+    while (rs.next() != false) {
+      zipCode = rs.getString("zipcode");
+    }
+    return zipCode;
+  }
+
+  private String getUserEmail(String username) throws SQLException {
+    Connection connection = dbutil.getConnection();
+
+    CallableStatement stmt = connection.prepareCall("{call get_user_email(?)}");
+
+    stmt.setString(1, username);
+    stmt.execute();
+
+    ResultSet rs = stmt.getResultSet();
+    String email = "";
+    while (rs.next() != false) {
+      email = rs.getString("email");
+    }
+    return email;
+  }
+
 
 
   /**

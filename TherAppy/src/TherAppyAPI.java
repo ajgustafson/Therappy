@@ -52,10 +52,10 @@ public interface TherAppyAPI {
   /**
    * Get a filtered list of therapists by given user's zip-code
    *
-   * @param user user to filter based on their zip-code
+   * @param username user to filter based on their zip-code
    * @return a list of therapists within the user's radius of 5 miles
    */
-  List<Therapist> getMatches(User user) throws IOException, SQLException;
+  List<Therapist> getMatches(String username) throws IOException, SQLException;
 
 
   /**
@@ -65,7 +65,7 @@ public interface TherAppyAPI {
    * @param password to authenticate
    * @return true if username and password match, false otherwise
    */
-  boolean checkPassword(String username, String password);
+  boolean checkPassword(String username, String password) throws SQLException;
 
   /**
    * Delete user from the database.
