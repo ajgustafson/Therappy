@@ -153,6 +153,7 @@ public class API implements TherAppyAPI {
     dbutil = new DBUtils("jdbc:mysql://localhost:3306/therappy", user, password);
   }
 
+
   public List<Therapist> getMatches(User user) throws IOException, SQLException {
 
     List<Therapist> therapists = new LinkedList<>();
