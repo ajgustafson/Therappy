@@ -18,7 +18,10 @@ import JDBC_utils.DBUtils;
 // Delete account
 // Logout
 
-
+/**
+ * Class to represent the user interface for TherAppy.  This class acts as a view to take
+ * information from the user and display information to the user.
+ */
 public class UI {
   DBUtils db = new DBUtils("jdbc:mysql://localhost:3306/Therappy?serverTimezone=EST5EDT",
           "therappy", "therappyproject!");
@@ -26,6 +29,34 @@ public class UI {
   String username = null;
   Scanner scan = new Scanner(System.in);
 
+
+  public void setUser() {
+    String response;
+    while (this.username == null) {
+      response = displayWelcomeMenu();
+
+      if (response.equals("E")) {
+        System.out.println("Goodbye!");
+        System.exit(0);
+      } else if (response.equals("N")) {
+        User user = newUser();
+        this.username = user.getUsername();
+      } else {
+        try {
+          this.username = returningUser();
+        } catch (IllegalStateException e) {
+          System.out.println(e.getMessage());
+        }
+      }
+    }
+  }
+
+  /**
+   * Display menu options before a user creates an account or logs in.
+   *
+   * @return user choice to register as a new user ("N"), log in as returning user ("R"), or exit
+   * ("E")
+   */
   private String displayWelcomeMenu() {
     System.out.println("Welcome to TherAppy!");
 
@@ -42,28 +73,12 @@ public class UI {
     return response;
   }
 
-  public void setUser() {
-    String response;
-    while (this.username == null) {
-      response = displayWelcomeMenu();
-
-      if (response.equals("E")) {
-        System.out.println("Goodbye!");
-        System.exit(0);
-      }
-      else if (response.equals("N")) {
-        User user = newUser();
-        this.username = user.getUsername();
-      } else {
-        try {
-          this.username = returningUser();
-        } catch (IllegalStateException e) {
-          System.out.println(e.getMessage());
-        }
-      }
-    }
-  }
-
+  /**
+   * Register a new user.  Collect all information about user including identification info, and
+   * therapist preference info.  Send all info to database interface.
+   *
+   * @return User object instantiated with all collected info
+   */
   private User newUser() {
     System.out.println("We're glad you are here!  Let us help you set up a profile to find a" +
             " therapist who matches your needs and preferences.");
@@ -122,9 +137,20 @@ public class UI {
     User newUser = new User(lName, fName, username, password, email, gender, dob, zipCode,
             insurance, maladies, maxDistance, prefGender, maxCost, prefQualification,
             needsInsurance, prefStyle);
+    api.insertUser(newUser);
+
+    getStylePreference(newUser);
+    api.updateUserStyle(newUser);
+
     return newUser;
   }
 
+  /**
+   * Ask user about any maladies they want to work on with their therapist and return a list of
+   * these maladies.
+   *
+   * @return list of maladies from user
+   */
   private List<String> getMaladies() {
     List<String> maladies = new ArrayList<>();
     System.out.println("Therapists help clients with a diverse set of experiences, including:\n" +
@@ -203,6 +229,76 @@ public class UI {
   }
 
   /**
+   * Ask user about their therapy style preferences and send these preferences to the database.
+   *
+   * @param user answering style preference questions
+   */
+  private void getStylePreference(User user) {
+    System.out.println("Each therapist has a different approach to caring for your mental health.\n" +
+            "The following questions help us find therapists that best meet your needs.\n");
+
+    String choice;
+    System.out.println("1.I have a goal -- 2.No preference -- 3.  I am open to seeing what " +
+            "happens");
+    choice = validateStyleChoice();
+    if (choice.equals("1")) {
+      api.insertStylePrefResponse(user, 1);
+    } else if (choice.equals("2")) {
+      api.insertStylePrefResponse(user, 2);
+    }
+
+    System.out.println("1.I am action oriented -- 2.No preference -- 3.I like to talk about my " +
+            "problems");
+    choice = validateStyleChoice();
+    if (choice.equals("1")) {
+      api.insertStylePrefResponse(user, 3);
+    } else if (choice.equals("2")) {
+      api.insertStylePrefResponse(user, 4);
+    }
+
+    System.out.println("1.I like structure -- 2.No preference -- 3.I like fluidity");
+    choice = validateStyleChoice();
+    if (choice.equals("1")) {
+      api.insertStylePrefResponse(user, 5);
+    } else if (choice.equals("2")) {
+      api.insertStylePrefResponse(user, 6);
+    }
+
+    System.out.println("1.I am willing to do work outside of sessions\n" +
+            " -- 2.No preference -- \n" +
+            "3.I want all my work to be done with my therapist");
+    choice = validateStyleChoice();
+    if (choice.equals("1")) {
+      api.insertStylePrefResponse(user, 7);
+    } else if (choice.equals("2")) {
+      api.insertStylePrefResponse(user, 8);
+    }
+
+    System.out.println("1.I like to be asked questions\n" +
+            " -- 2.No preference -- \n" +
+            "3.I prefer to talk about what is on my mind");
+    choice = validateStyleChoice();
+    if (choice.equals("1")) {
+      api.insertStylePrefResponse(user, 9);
+    } else if (choice.equals("2")) {
+      api.insertStylePrefResponse(user, 10);
+    }
+  }
+
+  /**
+   * Helper method to validate user choices to style preference questions.
+   *
+   * @return validated user choice
+   */
+  private String validateStyleChoice() {
+    String choice = "";
+    while (!choice.equals("1") && !choice.equals("2") && !choice.equals("3")) {
+      System.out.println("Enter the number for the choice that best represents your preference: ");
+    }
+    return choice;
+  }
+
+  /**
    * Get and authenticate returning user's username and password.  Return username if
    * authenticated.
    *
@@ -223,17 +319,21 @@ public class UI {
     }
   }
 
+  /**
+   * Displays and collects user choices from the home menu that a user sees once they have
+   * registered or logged in.
+   */
   public void displayHomeMenu() {
     String response;
     boolean quit = false;
     while (!quit) {
-      response = getMenuAction();
+      response = validateMenuAction();
       switch (response) {
         case "1":
-          displayMatches();
+//          displayMatches();
           break;
         case "2":
-          rateTherapist();
+//          rateTherapist();
           break;
         case "3":
           deleteAccount();
@@ -247,7 +347,12 @@ public class UI {
     }
   }
 
-  private String getMenuAction() {
+  /**
+   * Helper method to validate user choices from the home menu.
+   *
+   * @return validated choice from home menu
+   */
+  private String validateMenuAction() {
     String response = "";
     while (!response.equals("1") && !response.equals("2")
             && !response.equals("3") && !response.equals("4")) {
@@ -261,42 +366,52 @@ public class UI {
     }
     return response;
   }
+//TODO fix below!
 
-  private void displayMatches() {
-    System.out.println("Here are your top matches: ");
-    List<Therapist> matches = api.getMatches(this.username);
-    for (Therapist therapist : matches) {
-      System.out.println(therapist.toString());
-    }
-  }
+//  private void displayMatches() {
+//    System.out.println("Here are your top matches: ");
+//    List<Therapist> matches = api.getMatches(this.username);
+//    for (Therapist therapist : matches) {
+//      System.out.println(therapist.toString());
+//    }
+//  }
 
-  private void rateTherapist() {
-    System.out.println("Enter the last name of the therapist you would like to rate: ");
-    String lName = scan.nextLine();
-    System.out.println("Enter the first name of the therapist you would like to rate: ");
-    String fName = scan.nextLine();
+//  private void rateTherapist() {
+//    System.out.println("Enter the last name of the therapist you would like to rate: ");
+//    String lName = scan.nextLine();
+//    System.out.println("Enter the first name of the therapist you would like to rate: ");
+//    String fName = scan.nextLine();
+//
+//    int therapistID = api.getTherapistID(fName, lName);
+//    System.out.println("Would not recommend 1   2   3   4   5 Strongly recommend");
+//
+//    System.out.println("Follow the scale above to enter a rating for " + fName + " " + lName + ":");
+//    int rating = scan.nextInt();
+//
+//    api.insertTherapistRating(this.username, therapistID, rating);
+//    System.out.println("Thank you for adding your rating!");
+//  }
 
-    int therapistID = api.getTherapistID(fName, lName);
-    System.out.println("Would not recommend 1   2   3   4   5 Strongly recommend");
-
-    System.out.println("Follow the scale above to enter a rating for " + fName + " " + lName + ":");
-    int rating = scan.nextInt();
-
-    api.insertTherapistRating(this.username, therapistID, rating);
-    System.out.println("Thank you for adding your rating!");
-  }
-
+  /**
+   * Validates a user's choice to delete their account and communicates with the database to delete
+   * user data.
+   */
   private void deleteAccount() {
     System.out.println("Are you sure your want to delete your account? (Y/N): ");
     String response = scan.nextLine();
     if (response.equals("Y")) {
       api.deleteUser(this.username);
       System.out.println("Your account has been deleted.");
+      //TODO call system exit instead of "quit" in menu switch?
     }
   }
 
+  /**
+   * Log a user out of TherAppy.
+   */
   private void logout() {
     this.username = null;
     System.out.println("You have been logged out.  See you next time!");
+    //TODO call system exit instead of "quit" in menu switch?
   }
 }
