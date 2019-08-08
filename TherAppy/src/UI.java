@@ -49,6 +49,7 @@ public class UI {
       } else {
         try {
           this.username = returningUser();
+          System.out.println("Welcome back " + this.username + "!\n");
         } catch (IllegalStateException e) {
           System.out.println(e.getMessage());
         }
