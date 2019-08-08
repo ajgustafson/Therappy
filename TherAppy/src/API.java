@@ -31,24 +31,24 @@ public class API implements TherAppyAPI {
 
 
   /**
-   * FIXME - this method updated by Jeff and Mukhi on 8/1 When a user fills out all the information
-   * asked in the user-interface, this method inserts the majority of the entered information into
-   * the appropriate tables in the database.  The user's answers to the last 5 questions of our
-   * survey (related to style pref) are inserted via a separate method.
+   * When a user fills out all the information asked in the user-interface, this method inserts the
+   * majority of the entered information into the appropriate tables in the database.  The user's answers
+   * to the last 5 questions of our survey (related to style pref) are inserted via a separate method.
    *
    * @param user User to insert
    */
   @Override
   public void insertUser(User user) {
 
-    String user_basics_sql = "call insert_user_basics('" + user.getFirstName() + "','" + user.getLastName() + "','" + user.getUsername() + "','" +
-            user.getPassword() + "','" + user.getDob() + "','" + user.getGender() + "','" + user.getEmail() + "','" + user.getZipCode()
-            + "'," + user.getMaxDistance() + ",'" + user.getPrefGender() + "'," + user.getMaxCost() + "," + user.getNeedsInsurance()
-            + ")";
+    String user_basics_sql = "call insert_user_basics('" + user.getFirstName() + "','" + user.getLastName() + "','"
+            + user.getUsername() + "','" + user.getPassword() + "','" + user.getDob() + "','" + user.getGender()
+            + "','" + user.getEmail() + "','" + user.getZipCode() + "'," + user.getMaxDistance() + ",'"
+            + user.getPrefGender() + "'," + user.getMaxCost() + "," + user.getNeedsInsurance() + ")";
 
     String user_insurance_sql = "call insert_user_insurance('" + user.getEmail() + "','" + user.getInsurance() + "')";
 
-    String user_qual_pref_sql = "call insert_user_qual_pref('" + user.getEmail() + "','" + user.getPrefQualification() + "')";
+    String user_qual_pref_sql = "call insert_user_qual_pref('" + user.getEmail() + "','" + user.getPrefQualification()
+            + "')";
 
     dbutil.insertOneRecord(user_basics_sql);
 
@@ -58,6 +58,7 @@ public class API implements TherAppyAPI {
     //If user qualifcation preference does not exist, this entry left as null in User table
     dbutil.insertOneRecord(user_qual_pref_sql);
 
+    //Adds the users maladies to the Database
     for (int i = 0; i < user.getMaladies().size(); i++) {
       String user_malady_sql = "call insert_user_malady('" + user.getEmail() + "','" + user.getMaladies().get(i) + "')";
       dbutil.insertOneRecord(user_malady_sql);
@@ -65,8 +66,8 @@ public class API implements TherAppyAPI {
   }
 
   /**
-   * FIXME - this method updated by Jeff and Mukhi on 8/1 This method inserts the user's responses
-   * to one of the 5 questions related to style pref into the database.
+   * This method inserts the user's responses to one of the 5 questions related to
+   * style pref into the database.
    *
    * @param user     User that responded to the question
    * @param choiceID ID of the choice to which this response correlates
@@ -81,12 +82,11 @@ public class API implements TherAppyAPI {
   }
 
   /**
-   * FIXME - this method updated by Jeff and Mukhi on 8/1 This method populates (via a call to a
+   * This method populates (via a call to a
    * stored procedure) the user's style preference in the DB. This method should be called after the
    * user's responses to the 5 questions related to style pref have been inserted into the DB
    *
-   * @param user User to update style pref for TODO -  add exception handling in case this method is
-   *             called when all the needed data isn't present
+   * @param user User to update style pref for
    */
   @Override
   public void updateUserStyle(User user) {
@@ -97,8 +97,7 @@ public class API implements TherAppyAPI {
 
 
   /**
-   * FIXME - this method updated by Jeff and Mukhi on 8/1 Method to insert a user's rating of a
-   * therapist into the database
+   * Method to insert a user's rating of a therapist into the database
    *
    * @param username    User who rates the therapist
    * @param therapistID ID of the therapist that was rated
@@ -211,7 +210,7 @@ public class API implements TherAppyAPI {
 
     // Get the zip codes from the URL
     InputStream in = new URL("https://www.zipcodeapi.com/rest/" +
-            "WnU4UL8yVFW53jd6dlYQZahLb7oWBo060YiW8o6w11pHDAd4L5dcRXEiDF5ZHkqv/" +
+            "zQikoFcAnHS1gCG1Ugm9n1Wo6PDD827OePlkSIclLsqftHtUOAqNql2f2AP8EBPt/" +
             "radius.csv/" + zipCode + "/5/mile").openStream();
 
     // prepare to parse the data
