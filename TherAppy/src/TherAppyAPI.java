@@ -8,7 +8,7 @@ import java.util.List;
 public interface TherAppyAPI {
 
   /**
-   * FIXME - this method updated by Jeff and Mukhi on 8/1 When a user fills out all the information
+   * When a user fills out all the information
    * asked in the user-interface, this method inserts the majority of the entered information into
    * the appropriate tables in the database.  The user's answers to the last 5 questions of our
    * survey (related to style pref) are inserted via a separate method.
@@ -18,17 +18,15 @@ public interface TherAppyAPI {
   void insertUser(User user);
 
   /**
-   * FIXME - this method updated by Jeff and Mukhi on 8/1 This method inserts a user's responses to
-   * one of the 5 questions related to style pref into the database.
-   *
+   * This method inserts a user's responses to one of the 5 questions related to
+   * style pref into the database.
    * @param user     User that responded to the question
    * @param choiceID ID of the choice to which this response correlates
    */
   void insertStylePrefResponse(User user, int choiceID);
 
-
   /**
-   * FIXME - this method updated by Jeff and Mukhi on 8/1 This method populates (via a call to a
+   * This method populates (via a call to a
    * stored procedure) the user's style preference in the DB. This method should be called after the
    * user's responses to the 5 questions related to style pref have been inserted into the DB
    *
@@ -38,8 +36,7 @@ public interface TherAppyAPI {
   void updateUserStyle(User user);
 
   /**
-   * FIXME - this method updated by Jeff and Mukhi on 8/1 Method to insert a user's rating of a
-   * therapist into the database
+   * Method to insert a user's rating of a therapist into the database
    *
    * @param username    User who rates the therapist
    * @param therapistID ID of the therapist that was rated
