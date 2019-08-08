@@ -14,10 +14,8 @@ public interface TherAppyAPI {
    * survey (related to style pref) are inserted via a separate method.
    *
    * @param user User to insert
-   * @return the userID for this user; -1 if user already exists - TODO - TBD this may change
-   */
-  //TODO currently not returning anything. does it really need to return the userID?
-  int insertUser(User user);
+   **/
+  void insertUser(User user);
 
   /**
    * FIXME - this method updated by Jeff and Mukhi on 8/1 This method inserts a user's responses to
@@ -83,6 +81,7 @@ public interface TherAppyAPI {
    */
   int getTherapistID(String firstName, String lastName) throws SQLException;
 
+  //TODO do we need these last two?
   /**
    * Set connection settings
    */

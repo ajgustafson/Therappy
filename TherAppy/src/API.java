@@ -12,10 +12,19 @@ import java.util.Scanner;
 
 import JDBC_utils.DBUtils;
 
+
 public class API implements TherAppyAPI {
 
+  /**
+   * JDBC utility
+   */
   private DBUtils dbutil;
 
+  /**
+   * Construct an API object with given database utilities.
+   *
+   * @param dbutil JDBC utility to connect Java application with MySQL database
+   */
   public API(DBUtils dbutil) {
     this.dbutil = dbutil;
   }
@@ -28,11 +37,9 @@ public class API implements TherAppyAPI {
    * survey (related to style pref) are inserted via a separate method.
    *
    * @param user User to insert
-   * @return the userID for this user; -1 if user already exists - TODO - TBD this may change
    */
-  //TODO currently not returning anything. does it really need to return the userID?
   @Override
-  public int insertUser(User user) {
+  public void insertUser(User user) {
 
     String user_basics_sql = "call insert_user_basics('" + user.getFirstName() + "','" + user.getLastName() + "','" + user.getUsername() + "','" +
             user.getPassword() + "','" + user.getDob() + "','" + user.getGender() + "','" + user.getEmail() + "','" + user.getZipCode()
@@ -55,11 +62,7 @@ public class API implements TherAppyAPI {
       String user_malady_sql = "call insert_user_malady('" + user.getEmail() + "','" + user.getMaladies().get(i) + "')";
       dbutil.insertOneRecord(user_malady_sql);
     }
-
-    //Need to adjust if how this method returns
-    return 1;
   }
-
 
   /**
    * FIXME - this method updated by Jeff and Mukhi on 8/1 This method inserts the user's responses
@@ -119,7 +122,7 @@ public class API implements TherAppyAPI {
   /**
    * Check the password for a given user.
    *
-   * @param username  User to login with given password
+   * @param username User to login with given password
    * @param password to authenticate
    * @return true if username and password match, false otherwise
    */
@@ -141,8 +144,7 @@ public class API implements TherAppyAPI {
 
     if (result.equals("1")) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
@@ -155,7 +157,7 @@ public class API implements TherAppyAPI {
    */
   @Override
   public void deleteUser(String username) {
-     String delete_sql = "call delete_user('" + username + "')";
+    String delete_sql = "call delete_user('" + username + "')";
     dbutil.insertOneRecord(delete_sql);
   }
 
@@ -191,7 +193,14 @@ public class API implements TherAppyAPI {
     dbutil = new DBUtils("jdbc:mysql://localhost:3306/therappy", user, password);
   }
 
-
+  /**
+   * Get a list of therapist matches for given user.
+   *
+   * @param username user to match with therapists
+   * @return List of therapists that match with given user
+   * @throws IOException  //TODO when does it throw this?
+   * @throws SQLException if an error occurs when interacting with the database
+   */
   public List<Therapist> getMatches(String username) throws IOException, SQLException {
 
     List<Therapist> therapists = new LinkedList<>();
@@ -251,6 +260,13 @@ public class API implements TherAppyAPI {
     return filteredTherapists;
   }
 
+  /**
+   * Helper method to get a user's zip code from the database based on their username.
+   *
+   * @param username of user to fetch zip code
+   * @return zip code of user with given username
+   * @throws SQLException if an error occurs when interacting with the database
+   */
   private String getUserZipCode(String username) throws SQLException {
     Connection connection = dbutil.getConnection();
 
@@ -267,6 +283,13 @@ public class API implements TherAppyAPI {
     return zipCode;
   }
 
+  /**
+   * Helper method to get a user's email address from the database.
+   *
+   * @param username of user to get email address
+   * @return email address for user with given username
+   * @throws SQLException if an error occurs when interacting with the database.
+   */
   private String getUserEmail(String username) throws SQLException {
     Connection connection = dbutil.getConnection();
 
@@ -282,7 +305,6 @@ public class API implements TherAppyAPI {
     }
     return email;
   }
-
 
 
   /**

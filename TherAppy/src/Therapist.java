@@ -73,6 +73,7 @@ public class Therapist {
     this.qualification = qualification;
   }
 
+  //TODO get rid of the getters that we don't need?
   public String getFirstName() {
     return firstName;
   }
@@ -126,5 +127,4 @@ public class Therapist {
             + "Degree: " + this.qualification + "\n"
             + "}";
   }
-
 }

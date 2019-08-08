@@ -5,19 +5,21 @@ import java.util.Scanner;
 
 import JDBC_utils.DBUtils;
 
+// Template for UI experience
+// Choose user (new or returning)
 
 // New user
-// Fill out questionnaire
-// Display menu
+  // Fill out questionnaire
+  // Display menu
 
 // Returning user
-// Display menu
+  // Display menu
 
 // Menu
-// Display matches
-// Rate therapist
-// Delete account
-// Logout
+  // Display matches
+  // Rate therapist
+  // Delete account
+  // Logout
 
 /**
  * Class to represent the user interface for TherAppy.  This class acts as a view to take
@@ -232,7 +234,8 @@ public class UI {
           String other = scan.nextLine();
           maladies.add(other);
           break;
-        //TODO default?? WHat if the user types a number other than 1-18?
+        default:
+          break;
       }
     }
     return maladies;
@@ -381,10 +384,10 @@ public class UI {
     return response;
   }
 
-
-//TODO Can getMatches take in just the username?
-
-  public void displayMatches() {
+  /**
+   * Display therapist matches for current user.
+   */
+  private void displayMatches() {
     List<Therapist> matches = null;
     System.out.println("Here are your top matches: ");
     try {
@@ -397,7 +400,9 @@ public class UI {
     }
   }
 
-
+  /**
+   * Enable current user to rate a therapist.
+   */
   private void rateTherapist() {
     System.out.println("Enter the last name of the therapist you would like to rate: ");
     String lName = scan.nextLine();
