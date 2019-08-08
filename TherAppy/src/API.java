@@ -32,8 +32,9 @@ public class API implements TherAppyAPI {
 
   /**
    * When a user fills out all the information asked in the user-interface, this method inserts the
-   * majority of the entered information into the appropriate tables in the database.  The user's answers
-   * to the last 5 questions of our survey (related to style pref) are inserted via a separate method.
+   * majority of the entered information into the appropriate tables in the database.  The user's
+   * answers to the last 5 questions of our survey (related to style pref) are inserted via a
+   * separate method.
    *
    * @param user User to insert
    */
@@ -66,8 +67,8 @@ public class API implements TherAppyAPI {
   }
 
   /**
-   * This method inserts the user's responses to one of the 5 questions related to
-   * style pref into the database.
+   * This method inserts the user's responses to one of the 5 questions related to style pref into
+   * the database.
    *
    * @param user     User that responded to the question
    * @param choiceID ID of the choice to which this response correlates
@@ -82,9 +83,9 @@ public class API implements TherAppyAPI {
   }
 
   /**
-   * This method populates (via a call to a
-   * stored procedure) the user's style preference in the DB. This method should be called after the
-   * user's responses to the 5 questions related to style pref have been inserted into the DB
+   * This method populates (via a call to a stored procedure) the user's style preference in the DB.
+   * This method should be called after the user's responses to the 5 questions related to style
+   * pref have been inserted into the DB
    *
    * @param user User to update style pref for
    */
@@ -235,6 +236,8 @@ public class API implements TherAppyAPI {
 
     ResultSet rs = stmt.getResultSet();
 
+    List<Integer> matchScores = new ArrayList<>();
+
 
     while (rs.next() != false) {
       therapists.add(new Therapist(rs.getInt("therapist_id"),
@@ -243,6 +246,8 @@ public class API implements TherAppyAPI {
               rs.getString("email"), rs.getString("phone_number"),
               rs.getString("zipcode"), rs.getFloat("cost_per_session"),
               rs.getString("style_id"), rs.getString("qualification_id")));
+
+      matchScores.add(rs.getInt("match_score"));
     }
 
     for (Therapist therapist : therapists) {
@@ -253,10 +258,28 @@ public class API implements TherAppyAPI {
 
     //TODO close connection?
 
-    if (filteredTherapists.size() == 0) {
-      return therapists;
+    stmt = connection.prepareCall("{call getUserID(?)}");
+    stmt.setString(1, email);
+    stmt.execute();
+
+    rs = stmt.getResultSet();
+
+    int userID = rs.getInt("user_id");
+
+    if (filteredTherapists.size() > 0) {
+      therapists = filteredTherapists;
     }
-    return filteredTherapists;
+
+    for (int i = 0; i < 5; i++) {
+      stmt = connection.prepareCall("{call insertMatches(?,?,?)}");
+      stmt.setString(2, "" + therapists.get(i).getID());
+      stmt.setString(1, "" + userID);
+      stmt.setString(3, "" + matchScores.get(i));
+
+      stmt.execute();
+    }
+
+    return therapists;
   }
 
   /**

@@ -74,6 +74,9 @@ public class Therapist {
   }
 
   //TODO get rid of the getters that we don't need?
+  public int getID() {
+    return therapistID;
+  }
   public String getFirstName() {
     return firstName;
   }
