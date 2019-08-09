@@ -479,6 +479,7 @@ public class UI {
    */
   private void logout() {
     this.username = null;
+    api.closeConnection();
     System.out.println("You have been logged out.  See you next time!");
     System.exit(0);
   }

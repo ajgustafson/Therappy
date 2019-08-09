@@ -425,6 +425,19 @@ begin
 end //
 delimiter ;
 
+drop procedure if exists get_user_max_distance;
+
+delimiter //
+create procedure get_user_max_distance
+(
+	in username_param VARCHAR(50)
+)
+begin
+    SELECT max_distance FROM user WHERE username = username_param;
+        
+end //
+delimiter ;
+
 -- Procedure to get therapist ID
 drop procedure if exists get_therapist_id;
 

@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+import JDBC_utils.DBUtils;
+
 /**
  * Application interface that describes methods available to interact with the TherAppy database.
  */
@@ -78,12 +80,6 @@ public interface TherAppyAPI {
    * @return given therapist's ID number
    */
   int getTherapistID(String firstName, String lastName) throws SQLException;
-
-  //TODO do we need these last two?
-  /**
-   * Set connection settings
-   */
-  void authenticate(String user, String password);
 
   /**
    * Close the connection when application finishes

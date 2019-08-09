@@ -12,7 +12,10 @@ import java.util.Scanner;
 
 import JDBC_utils.DBUtils;
 
-
+/**
+ * This class is an API for the Therappy project. It allows you to insert information into the
+ * database as well as filter therapist matches and delete a user among other operations.
+ */
 public class API implements TherAppyAPI {
 
   /**
@@ -41,16 +44,23 @@ public class API implements TherAppyAPI {
   @Override
   public void insertUser(User user) {
 
-    String user_basics_sql = "call insert_user_basics('" + user.getFirstName() + "','" + user.getLastName() + "','"
-            + user.getUsername() + "','" + user.getPassword() + "','" + user.getDob() + "','" + user.getGender()
-            + "','" + user.getEmail() + "','" + user.getZipCode() + "'," + user.getMaxDistance() + ",'"
-            + user.getPrefGender() + "'," + user.getMaxCost() + "," + user.getNeedsInsurance() + ")";
+    // Building the stored procedure call query
+    // to insert the user into the database
+    String user_basics_sql = "call insert_user_basics('" + user.getFirstName() + "','"
+            + user.getLastName() + "','" + user.getUsername() + "','" + user.getPassword() + "','"
+            + user.getDob() + "','" + user.getGender() + "','" + user.getEmail() + "','"
+            + user.getZipCode() + "'," + user.getMaxDistance() + ",'" + user.getPrefGender() + "',"
+            + user.getMaxCost() + "," + user.getNeedsInsurance() + ")";
 
-    String user_insurance_sql = "call insert_user_insurance('" + user.getEmail() + "','" + user.getInsurance() + "')";
+    // query to insert insurance information about the user
+    String user_insurance_sql = "call insert_user_insurance('" + user.getEmail() + "','"
+            + user.getInsurance() + "')";
 
-    String user_qual_pref_sql = "call insert_user_qual_pref('" + user.getEmail() + "','" + user.getPrefQualification()
-            + "')";
+    // query to insert the user's qualification preference (PhD)
+    String user_qual_pref_sql = "call insert_user_qual_pref('" + user.getEmail() + "','"
+            + user.getPrefQualification() + "')";
 
+    // Inserts the user into the database
     dbutil.insertOneRecord(user_basics_sql);
 
     //Creates new insurance record if user record for insurance does not exist
@@ -61,7 +71,8 @@ public class API implements TherAppyAPI {
 
     //Adds the users maladies to the Database
     for (int i = 0; i < user.getMaladies().size(); i++) {
-      String user_malady_sql = "call insert_user_malady('" + user.getEmail() + "','" + user.getMaladies().get(i) + "')";
+      String user_malady_sql = "call insert_user_malady('" + user.getEmail() + "','"
+              + user.getMaladies().get(i) + "')";
       dbutil.insertOneRecord(user_malady_sql);
     }
   }
@@ -77,7 +88,6 @@ public class API implements TherAppyAPI {
   public void insertStylePrefResponse(User user, int choiceID) {
 
     String user_response_sql = "call insert_response('" + user.getEmail() + "','" + choiceID + "')";
-
     dbutil.insertOneRecord(user_response_sql);
 
   }
@@ -128,20 +138,25 @@ public class API implements TherAppyAPI {
    */
   @Override
   public boolean checkPassword(String username, String password) throws SQLException {
-    Connection connection = dbutil.getConnection();
 
+    // Getting connection to the database and preparing to call a stored procedure
+    // to validate that the user has typed the right credentials
+    Connection connection = dbutil.getConnection();
     CallableStatement stmt = connection.prepareCall("{call validate_user(?, ?)}");
 
+    // set the parameters
     stmt.setString(1, username);
     stmt.setString(2, password);
     stmt.execute();
 
+    // get the results of the query
     ResultSet rs = stmt.getResultSet();
     String result = "";
     while (rs.next() != false) {
       result = rs.getString("result");
     }
 
+    // check the result
     if (result.equals("1")) {
       return true;
     } else {
@@ -171,26 +186,24 @@ public class API implements TherAppyAPI {
    */
   @Override
   public int getTherapistID(String firstName, String lastName) throws SQLException {
+    // Connect to the database
     Connection connection = dbutil.getConnection();
-
     CallableStatement stmt = connection.prepareCall("{call get_therapist_id(?, ?)}");
 
+    // Set the parameters
     stmt.setString(1, firstName);
     stmt.setString(2, lastName);
     stmt.execute();
 
+    // Get the results of the stored procedure
     ResultSet rs = stmt.getResultSet();
     String result = "";
     while (rs.next() != false) {
       result = rs.getString("therapist_id_var");
     }
+
+    // return the ID
     return Integer.parseInt(result);
-  }
-
-  @Override
-  public void authenticate(String user, String password) {
-
-    dbutil = new DBUtils("jdbc:mysql://localhost:3306/therappy", user, password);
   }
 
   /**
@@ -201,18 +214,24 @@ public class API implements TherAppyAPI {
    * @throws IOException  //TODO when does it throw this?
    * @throws SQLException if an error occurs when interacting with the database
    */
-  public List<Therapist> getMatches(String username, boolean insert) throws IOException, SQLException {
+  public List<Therapist> getMatches(String username, boolean insert)
+          throws IOException, SQLException {
 
+    // A list of therapists without zipcode filtering
     List<Therapist> therapists = new LinkedList<>();
-    List<Therapist> filteredTherapists = new ArrayList<>();
 
+    // A list of therapists WITH zipcode filtering
+    List<Therapist> therapistsFilteredByZipcode = new ArrayList<>();
+
+    // Get the zipcode, email, and distance from the database
     String zipCode = getUserZipCode(username);
     String email = getUserEmail(username);
+    String distance = getUserDistance(username);
 
     // Get the zip codes from the URL
     InputStream in = new URL("https://www.zipcodeapi.com/rest/" +
-            "EEw9386oEBdxQZT4h9EDvZTFdd9IfcaABAuoA3hBD6rU4Epe5BPAfFjcSlO5NQEB/" +
-            "radius.csv/" + zipCode + "/5/mile").openStream();
+            "kOG5lF8QkczEUsfJLvwreaPQLLMAo5Wsp0orHvbfacQOgqRoafnwMP5mZvgQBU70/" +
+            "radius.csv/" + zipCode + "/" + distance + "/mile").openStream();
 
     // prepare to parse the data
     Scanner scanner = new Scanner(in);
@@ -228,9 +247,12 @@ public class API implements TherAppyAPI {
       zips.add(Integer.parseInt(line.split(",")[0]));
     }
 
+    // Get the connection to the database and prepare to call the stored procedure
+    // to find matching therapists
     Connection connection = dbutil.getConnection();
     CallableStatement stmt = connection.prepareCall("{call findMatchingTherapists(?)}");
 
+    // set the parameter and execute
     stmt.setString(1, email);
     stmt.execute();
 
@@ -251,18 +273,18 @@ public class API implements TherAppyAPI {
 
     for (Therapist therapist : therapists) {
       if (zips.contains(Integer.parseInt(therapist.getZipCode()))) {
-        filteredTherapists.add(therapist);
+        therapistsFilteredByZipcode.add(therapist);
       }
     }
 
     if (insert) {
-      insertTherapistMatches(username, matchScores, therapists, filteredTherapists);
+      insertTherapistMatches(username, matchScores, therapists, therapistsFilteredByZipcode);
     }
 
     //TODO close connection?
 
-    if (filteredTherapists.size() > 0) {
-      return filteredTherapists;
+    if (therapistsFilteredByZipcode.size() > 0) {
+      return therapistsFilteredByZipcode;
     }
     return therapists;
   }
@@ -345,6 +367,22 @@ public class API implements TherAppyAPI {
       email = rs.getString("email");
     }
     return email;
+  }
+
+  private String getUserDistance(String username) throws SQLException {
+    Connection connection = dbutil.getConnection();
+
+    CallableStatement stmt = connection.prepareCall("{call get_user_max_distance(?)}");
+
+    stmt.setString(1, username);
+    stmt.execute();
+
+    ResultSet rs = stmt.getResultSet();
+    String distance = "";
+    while (rs.next() != false) {
+      distance = rs.getString("max_distance");
+    }
+    return distance;
   }
 
 
