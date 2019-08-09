@@ -27,7 +27,7 @@ import JDBC_utils.DBUtils;
  */
 public class UI {
   DBUtils db = new DBUtils("jdbc:mysql://localhost:3306/Therappy?serverTimezone=EST5EDT",
-          "therappy", "therappyproject!");
+          "root", "openforehand45");
   API api = new API(db);
   String username = null;
   Scanner scan = new Scanner(System.in);
