@@ -289,25 +289,11 @@ public class API implements TherAppyAPI {
       matches = therapists;
     }
 
-    System.out.println(matches.size());
-
-    for (int match_score : matchScores) {
-      System.out.println(match_score);
-    }
-
 
     for (int i = 0; i < 5; i++) {
       int index;
       Therapist therapist = matches.get(i);
       index = therapists.indexOf(therapist);
-      
-//      Connection con = dbutil.getConnection();
-//      CallableStatement stmt2 = con.prepareCall("{call insert_matches(?,?,?)}");
-//      stmt2.setString(1, "" + userID);
-//      stmt2.setString(2, "" + therapist.getID());
-//      stmt2.setString(3, "" + matchScores.get(index));
-
-      // stmt2.execute();
 
       String insert_sql = "call insert_matches(" + userID + ", " + therapist.getID() +
               ", " + matchScores.get(index) + ")";
