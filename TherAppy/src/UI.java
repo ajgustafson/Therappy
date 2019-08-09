@@ -1,6 +1,5 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,17 +12,17 @@ import JDBC_utils.DBUtils;
 // Choose user (new or returning)
 
 // New user
-  // Fill out questionnaire
-  // Display menu
+// Fill out questionnaire
+// Display menu
 
 // Returning user
-  // Display menu
+// Display menu
 
 // Menu
-  // Display matches
-  // Rate therapist
-  // Delete account
-  // Logout
+// Display matches
+// Rate therapist
+// Delete account
+// Logout
 
 /**
  * Class to represent the user interface for TherAppy.  This class acts as a view to take
@@ -44,21 +43,28 @@ public class UI {
     String dbPassword = "";
 
     try {
+
+      // grab the username from a file
       InputStream in1 = new FileInputStream("file1.txt");
       Scanner s = new Scanner(in1);
-      dbUsername= s.nextLine();
+      dbUsername = s.nextLine();
+
+      // grab the password from a different file
       InputStream in2 = new FileInputStream("file2.txt");
       s = new Scanner(in2);
-      dbPassword= s.nextLine();
+      dbPassword = s.nextLine();
+
     } catch (FileNotFoundException e) {
       System.out.print(e.getMessage());
     }
 
+    // set up the database connection and the API
     this.db = new DBUtils("jdbc:mysql://localhost:3306/Therappy?serverTimezone=EST5EDT",
             dbUsername, dbPassword);
 
     this.api = new API(db);
   }
+
   /**
    * Sets the user of this session as a new or returning user.
    */
@@ -67,13 +73,18 @@ public class UI {
     while (this.username == null) {
       response = displayWelcomeMenu();
 
+      // Gives various options for the user
       if (response.equals("E")) {
         System.out.println("Goodbye!");
         System.exit(0);
-      } else if (response.equals("N")) {
+      }
+
+      else if (response.equals("N")) {
         User user = newUser();
         this.username = user.getUsername();
-      } else {
+      }
+
+      else {
         try {
           this.username = returningUser();
           System.out.println("Welcome back " + this.username + "!\n");
@@ -95,6 +106,7 @@ public class UI {
 
     String response = "";
 
+    // This forces the user to choose one of our options
     while (!response.equals("N") && !response.equals("R") && !response.equals("E")) {
       System.out.println("New user?  Type: N");
       System.out.println("Returning user? Type: R");
@@ -106,7 +118,6 @@ public class UI {
     return response;
   }
 
-  //TODO Validate user input????
 
   /**
    * Register a new user.  Collect all information about user including identification info, and
@@ -117,6 +128,7 @@ public class UI {
   private User newUser() {
     System.out.println("We're glad you are here!  Let us help you set up a profile to find a" +
             " therapist who matches your needs and preferences.");
+
     System.out.println("First name: ");
     String fName = scan.nextLine();
 
@@ -162,23 +174,35 @@ public class UI {
 
     System.out.println("Require therapist to accept insurance (Y/N): ");
     String textInsReq = scan.nextLine();
+
     int needsInsurance;
+
     if (textInsReq.equals("Y")) {
+
       needsInsurance = 1;
+
     } else {
+
       needsInsurance = 0;
     }
 
     int prefStyle = 0;
 
+    //creates a new user object from all the collected data
     User newUser = new User(lName, fName, username, password, email, gender, dob, zipCode,
             insurance, maladies, maxDistance, prefGender, maxCost, prefQualification,
             needsInsurance, prefStyle);
+
+    //inserts info about the new user into the database!
     api.insertUser(newUser);
 
+    // This gets the style preference of the user.
     getStylePreference(newUser);
+
+    //This updated the style preference in the database
     api.updateUserStyle(newUser);
 
+    //gets the matches from the database
     try {
       api.getMatches(username, true);
     } catch (Exception e) {
@@ -439,13 +463,17 @@ public class UI {
    * Enable current user to rate a therapist.
    */
   private void rateTherapist() {
+
     System.out.println("Enter the last name of the therapist you would like to rate: ");
     String lName = scan.nextLine();
     System.out.println("Enter the first name of the therapist you would like to rate: ");
     String fName = scan.nextLine();
 
+
     int therapistID = 0;
+
     try {
+      //gets the therapist id from the database
       therapistID = api.getTherapistID(fName, lName);
     } catch (SQLException e) {
       System.out.println(e.getMessage());
