@@ -140,22 +140,30 @@ begin
     declare total_sum_var int;
     declare style_id_var int;
         
-select user_id into user_id_var from user where email = email_param;
+	select user_id into user_id_var from user where email = email_param;
 
-select SUM(value) into total_sum_var from user_makes_choices u left join choice c on (u.choice_id = c.choice_id) where user_id = user_id_var; 
+	-- Get the total score from the user's answers in the style section of the quiz
+	select SUM(value) 
+    into total_sum_var 
+    from user_makes_choices u left join choice c on (u.choice_id = c.choice_id) 
+    where user_id = user_id_var; 
 
-if (total_sum_var > 0) then
-	select style_id into style_id_var from style where name = 'behavoiral' limit 1;
-	update user
-	set style_pref = style_id_var
-	where email = email_param;
-end if;
-if (total_sum_var < 0) then
-	select style_id into style_id_var from style where name = 'procedural' limit 1;
-	update user
-	set style_pref = style_id_var
-	where email = email_param;
-end if;
+	-- If the sum of the user's answers was positive,
+    -- assign to them behavioral style
+	if (total_sum_var > 0) then
+		select style_id into style_id_var from style where name = 'behavioral' limit 1;
+		update user
+		set style_pref = style_id_var
+		where email = email_param;
+	end if;
+    
+    -- else, assign procedural
+	if (total_sum_var < 0) then
+		select style_id into style_id_var from style where name = 'procedural' limit 1;
+		update user
+		set style_pref = style_id_var
+		where email = email_param;
+	end if;
 	
 end //
 delimiter ;
@@ -173,9 +181,14 @@ create procedure insert_therapist_rating
 begin
     declare user_id_var int;
         
-select user_id into user_id_var from user where email = email_param;
+	select user_id 
+    into user_id_var 
+    from user 
+    where email = email_param;
 
-insert into user_rates_therapist(user_id, therapist_id, rating) values (user_id_var, therapist_id_param, rating_param);
+	insert into user_rates_therapist(user_id, therapist_id, rating) 
+    values (user_id_var, therapist_id_param, rating_param);
+    
 end //
 delimiter ;
 
@@ -243,9 +256,14 @@ begin
 			user_id, first_name, last_name,
 			gender = gender_var as gender_match,
 			gender_pref = gender_pref_var as gender_pref_match,
+            
+            -- calculates the age: absolute value(user's age - similar user's age)
 			abs(CAST(age_var AS SIGNED) - CAST(year(now()) - year(dob) as signed)) <= 5 as age_match,
+            
 			style_pref_var = style_pref as style_match,
 			qualification_pref_var = qualification_pref as qualification_match,
+            
+            -- checking if the user exhibits similar maladies
 			user_id in (
 				select uem.user_id from user_exhibits_malady um 
 				join user_exhibits_malady uem on (um.malady_id = uem.malady_id and um.user_id != uem.user_id)
@@ -332,7 +350,11 @@ begin
 			ts.cost_per_session,
 			ts.style_id,
 			ts.qualification_id,
-			ifnull(round(ts.gender_pref_match + ts.style_match + ts.qualification_match + ts.cost_match + ts.malady_match + ts.insurance_match + ifnull((avg(urt.rating)), 0), 2), 0) as 'match_score'
+            
+            -- Round the sum of the matches and if it's null, consider it 0
+			ifnull(round(ts.gender_pref_match + ts.style_match + ts.qualification_match + 
+            ts.cost_match + ts.malady_match + ts.insurance_match + ifnull((avg(urt.rating)), 0), 2), 0) as 'match_score'
+            
         from therapist_scores ts left join user_rates_therapist urt on (ts.therapist_id = urt.therapist_id)
         left join similar_users using (user_id)
         group by ts.therapist_id
@@ -356,33 +378,33 @@ create procedure delete_user
 	in username_param varchar(255)
 )
 begin
-declare user_id_var int;
+	declare user_id_var int;
 
-select user_id into user_id_var from user where username = username_param;
+	select user_id into user_id_var from user where username = username_param;
 
-delete
- from user_exhibits_malady
- where user_id = user_id_var;
- 
- delete
- from user_makes_choices
-  where user_id = user_id_var;
-  
-  delete
-  from  user_matches_therapist
-   where user_id = user_id_var;
-   
-   delete
-  from user_rates_therapist
-  where user_id = user_id_var;
+	delete
+	from user_exhibits_malady
+	where user_id = user_id_var;
+	 
+	delete
+	from user_makes_choices
+	where user_id = user_id_var;
+	  
+	delete
+	from  user_matches_therapist
+	where user_id = user_id_var;
+	   
+	delete
+	from user_rates_therapist
+	where user_id = user_id_var;
 
-
-DELETE
- FROM user
- where username = username_param;
+	DELETE
+	FROM user
+	where username = username_param;
 
 end //
 delimiter ;
+
 
 -- Procedure to get a user's zipcode from their username
 drop procedure if exists get_user_zipcode;
@@ -393,10 +415,13 @@ create procedure get_user_zipcode
 	in username_param VARCHAR(50)
 )
 begin
-    SELECT zipcode FROM user WHERE username = username_param;
+    SELECT zipcode 
+    FROM user 
+    WHERE username = username_param;
 
 end //
 delimiter ;
+
 
 -- Procedure to get a user's zipcode from their username
 drop procedure if exists get_user_email;
@@ -407,7 +432,10 @@ create procedure get_user_email
 	in username_param VARCHAR(50)
 )
 begin
-    SELECT email FROM user WHERE username = username_param;
+
+    SELECT email 
+    FROM user 
+    WHERE username = username_param;
         
 end //
 delimiter ;
@@ -420,7 +448,10 @@ create procedure get_user_id
 	in username_param VARCHAR(50)
 )
 begin
-    SELECT user_id FROM user WHERE username = username_param;
+    
+    SELECT user_id 
+    FROM user 
+    WHERE username = username_param;
         
 end //
 delimiter ;
@@ -433,10 +464,14 @@ create procedure get_user_max_distance
 	in username_param VARCHAR(50)
 )
 begin
-    SELECT max_distance FROM user WHERE username = username_param;
+    
+    SELECT max_distance 
+    FROM user 
+    WHERE username = username_param;
         
 end //
 delimiter ;
+
 
 -- Procedure to get therapist ID
 drop procedure if exists get_therapist_id;
@@ -459,6 +494,7 @@ begin
 end //
 delimiter ;
 
+
 -- Procedure to validate password for existing user
 drop procedure if exists validate_user;
 
@@ -469,10 +505,14 @@ create procedure validate_user
     in password_param VARCHAR(20)
 )
 begin
+
 	DECLARE password_actual_var VARCHAR(20);
     DECLARE result TINYINT;
     
-    SELECT pwd INTO password_actual_var FROM user WHERE username = username_param;
+    SELECT pwd 
+    INTO password_actual_var 
+    FROM user 
+    WHERE username = username_param;
     
     IF (password_param = password_actual_var)
     THEN SET result = 1;
@@ -484,6 +524,7 @@ begin
 end //
 delimiter ;
 
+-- Inserts a single row into the matches table
 drop procedure if exists insert_matches;
 
 delimiter //

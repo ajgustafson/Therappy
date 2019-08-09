@@ -16,33 +16,40 @@ DROP TABLE IF EXISTS style;
 DROP TABLE IF EXISTS insurance;
 DROP TABLE IF EXISTS choice;
 
-
+-- This table holds all the options the user can choose for the
+-- style matching portion of the account creation quiz
 CREATE TABLE choice (
 	choice_id INT PRIMARY KEY,
         content VARCHAR(200) NOT NULL UNIQUE,
 	value INT
 );
 
+-- This table holds information for insurance companies
 CREATE TABLE insurance (
 	insurance_id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL UNIQUE
 );
 
+-- This table holds information for the different styles of therapy
 CREATE TABLE style (
 	style_id INT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE
 );
 
+-- This table holds information for different maladies (Anxiety, Depression, etc.)
 CREATE TABLE malady (
 	malady_id INT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE
 );
 
+-- This table holds the qualfications (MA, PhD, PsyD)
 CREATE TABLE qualification (
 	qualification_id INT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE
 );
 
+-- This table holds the information about the user
+-- and has several foreign keys to tables such as insurance, qualification, and style
 CREATE TABLE user (
 	user_id INT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(50) NOT NULL,
@@ -65,6 +72,8 @@ CREATE TABLE user (
     CONSTRAINT user_fk_style FOREIGN KEY (style_pref) references style (style_id)
 );
 
+-- This table holds the information about the therapist
+-- and has several foreign keys to tables such as qualification, and style
 CREATE TABLE therapist (
 	therapist_id INT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
@@ -81,6 +90,8 @@ CREATE TABLE therapist (
     CONSTRAINT therapist_fk_qualification FOREIGN KEY (qualification_id) references qualification (qualification_id)
 );
 
+-- This table holds the user-therapist matches
+-- in addition to the strength of the match
 CREATE TABLE user_matches_therapist (
 	user_id INT NOT NULL,
     CONSTRAINT matches_fk_user FOREIGN KEY (user_id) references user (user_id),
@@ -90,15 +101,16 @@ CREATE TABLE user_matches_therapist (
     PRIMARY KEY (user_id, therapist_id)
 );
 
+-- Holds the user, the rating the user gave the therapist, and the therapist themselves
 CREATE TABLE user_rates_therapist (
 	user_id INT NOT NULL,
     CONSTRAINT rates_fk_user FOREIGN KEY (user_id) references user (user_id),
     therapist_id INT NOT NULL,
     CONSTRAINT rates_fk_therapist FOREIGN KEY (therapist_id) references therapist (therapist_id),
     rating INT NOT NULL
-    
 );
 
+-- Holds the therapist and the malady they treat.
 CREATE TABLE therapist_treats_malady (
 	therapist_id INT NOT NULL,
     CONSTRAINT treats_fk_therapist FOREIGN KEY (therapist_id) references therapist (therapist_id),
@@ -107,6 +119,7 @@ CREATE TABLE therapist_treats_malady (
     PRIMARY KEY (therapist_id, malady_id)
 );
 
+-- HOlds the therapist and the insurance they accept
 CREATE TABLE therapist_accepts_insurance (
 	therapist_id INT NOT NULL,
     CONSTRAINT accepts_fk_therapist FOREIGN KEY (therapist_id) references therapist (therapist_id),
@@ -115,6 +128,7 @@ CREATE TABLE therapist_accepts_insurance (
     PRIMARY KEY (therapist_id, insurance_id)
 );
 
+-- Holds the user and the maladies (or malady) they suffer from
 CREATE TABLE user_exhibits_malady (
 	user_id INT NOT NULL,
     CONSTRAINT exhibits_fk_user FOREIGN KEY (user_id) references user (user_id),
@@ -123,6 +137,7 @@ CREATE TABLE user_exhibits_malady (
    
 );
 
+-- Stores the user's choices in the style portion of the new-account quiz
 CREATE TABLE user_makes_choices(
 	user_id INT NOT NULL,
     CONSTRAINT answer_fk_user FOREIGN KEY (user_id) references user (user_id),
