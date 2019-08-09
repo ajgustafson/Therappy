@@ -211,7 +211,7 @@ public class API implements TherAppyAPI {
 
     // Get the zip codes from the URL
     InputStream in = new URL("https://www.zipcodeapi.com/rest/" +
-            "zQikoFcAnHS1gCG1Ugm9n1Wo6PDD827OePlkSIclLsqftHtUOAqNql2f2AP8EBPt/" +
+            "EEw9386oEBdxQZT4h9EDvZTFdd9IfcaABAuoA3hBD6rU4Epe5BPAfFjcSlO5NQEB/" +
             "radius.csv/" + zipCode + "/5/mile").openStream();
 
     // prepare to parse the data
@@ -256,14 +256,25 @@ public class API implements TherAppyAPI {
       }
     }
 
+    insertTherapistMatches(username, matchScores, therapists, filteredTherapists);
+
     //TODO close connection?
 
-    stmt = connection.prepareCall("{call getUserID(?)}");
-    stmt.setString(1, email);
+    return therapists;
+  }
+
+  private void insertTherapistMatches(String username, List<Integer> matchScores,
+                                      List<Therapist> therapists,
+                                      List<Therapist> filteredTherapists) throws SQLException {
+    Connection connection = dbutil.getConnection();
+    CallableStatement stmt = connection.prepareCall("{call get_user_id(?)}");
+    stmt.setString(1, username);
     stmt.execute();
 
-    rs = stmt.getResultSet();
+    ResultSet rs = stmt.getResultSet();
 
+
+    rs.next();
     int userID = rs.getInt("user_id");
 
     if (filteredTherapists.size() > 0) {
@@ -271,15 +282,13 @@ public class API implements TherAppyAPI {
     }
 
     for (int i = 0; i < 5; i++) {
-      stmt = connection.prepareCall("{call insertMatches(?,?,?)}");
+      stmt = connection.prepareCall("{call insert_matches(?,?,?)}");
       stmt.setString(2, "" + therapists.get(i).getID());
       stmt.setString(1, "" + userID);
       stmt.setString(3, "" + matchScores.get(i));
 
       stmt.execute();
     }
-
-    return therapists;
   }
 
   /**

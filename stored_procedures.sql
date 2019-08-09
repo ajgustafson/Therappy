@@ -411,6 +411,19 @@ begin
 end //
 delimiter ;
 
+drop procedure if exists get_user_id;
+
+delimiter //
+create procedure get_user_id
+(
+	in username_param VARCHAR(50)
+)
+begin
+    SELECT user_id FROM user WHERE username = username_param;
+        
+end //
+delimiter ;
+
 -- Procedure to get therapist ID
 drop procedure if exists get_therapist_id;
 
@@ -457,9 +470,27 @@ begin
 end //
 delimiter ;
 
+delimiter //
+create procedure insert_matches
+(
+	in user_id_param INT,
+    in therapist_id_param INT,
+    in score_param int
+)
+begin
+    
+    if (user_id_param not in (select user_id from user_matches_therapist)) then
+		INSERT INTO user_matches_therapist
+		VALUES (user_id_param, therapist_id_param, strength);
+	end if;
+        
+end //
+delimiter ;
 
 
 
+select *
+from user_matches_therapist;
 
 
 

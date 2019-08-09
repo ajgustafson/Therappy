@@ -1,4 +1,4 @@
-/*import org.junit.Before;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -19,16 +19,8 @@ public class apiTest {
 
   @Test
   public void testFilterTherapists() {
-    //    Calendar calendar = Calendar.getInstance();
-    //    calendar.set(1956, 12, 25);
-    User testUser = new User("Wickman", "Genia", "gwickman8",
-            "695BMNauvKp", "gwickman8@abc.net.au", "F", "1956-12-25",
-            "02118", "20010", null, 13, "M",
-            97, "30002", 1, 10001);
-
-
     try {
-      List<Therapist> therapists = api.getMatches(testUser);
+      List<Therapist> therapists = api.getMatches("gwickman8");
       for (Therapist therapist : therapists) {
         System.out.println(therapist);
       }
@@ -36,5 +28,4 @@ public class apiTest {
       System.out.println(e.getMessage());
     }
   }
-
-}*/
+}
