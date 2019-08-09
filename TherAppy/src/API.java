@@ -264,6 +264,9 @@ public class API implements TherAppyAPI {
 
     //TODO close connection?
 
+    if (filteredTherapists.size() > 0) {
+      return filteredTherapists;
+    }
     return therapists;
   }
 

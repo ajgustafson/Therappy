@@ -127,8 +127,6 @@ public class Therapist {
             + "DOB: " + this.dob + "\n"
             + "Zip code: " + this.zipCode + "\n"
             + "Cost: " + this.costPerSession + "\n"
-            + "Style: " + this.style + "\n"
-            + "Degree: " + this.qualification + "\n"
             + "}";
   }
 
