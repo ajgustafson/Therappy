@@ -258,55 +258,80 @@ public class API implements TherAppyAPI {
 
     ResultSet rs = stmt.getResultSet();
 
+    // a list of scores aligned with the non-zipcode filtered list of therapists
     List<Integer> matchScores = new ArrayList<>();
 
+    // add the therapist to the therapists list
+    // and add the match score to the therapists list
     while (rs.next() != false) {
-      therapists.add(new Therapist(rs.getInt("therapist_id"),
+      Therapist therapist = new Therapist(rs.getInt("therapist_id"),
               rs.getString("first_name"), rs.getString("last_name"),
               rs.getDate("dob"), rs.getString("gender"),
               rs.getString("email"), rs.getString("phone_number"),
               rs.getString("zipcode"), rs.getFloat("cost_per_session"),
-              rs.getString("style_id"), rs.getString("qualification_id")));
+              rs.getString("style_id"), rs.getString("qualification_id"));
+
+      therapists.add(therapist);
+
+      // if the given therapist's zipcode is in the radius,
+      // add them to the filtered list
+      if (zips.contains(Integer.parseInt(therapist.getZipCode()))) {
+        therapistsFilteredByZipcode.add(therapist);
+      }
 
       matchScores.add(rs.getInt("match_score"));
     }
 
-    for (Therapist therapist : therapists) {
-      if (zips.contains(Integer.parseInt(therapist.getZipCode()))) {
-        therapistsFilteredByZipcode.add(therapist);
-      }
-    }
-
+    // if we want to insert data into the database, do so
     if (insert) {
       insertTherapistMatches(username, matchScores, therapists, therapistsFilteredByZipcode);
     }
 
-    //TODO close connection?
-
+    // return the zipcode filtered list if there is at least 1 match
+    // in the radius, otherwise return therapists where zipcode matching was
+    // not considered
     if (therapistsFilteredByZipcode.size() > 0) {
       return therapistsFilteredByZipcode;
     }
     return therapists;
   }
 
+  /**
+   * Insert the user's therapist matches into the database
+   *
+   * @param username                    the username of the user
+   * @param matchScores                 a list of scores relating to the "therapists" list.
+   *                                    therapists[3] = matchScores[3]
+   * @param therapists                  a list of therapists without zipcode filtering
+   * @param therapistsFilteredByZipcode a list of therapists WITH zipcode filtering
+   * @throws SQLException if the SQL query fails
+   */
   private void insertTherapistMatches(String username, List<Integer> matchScores,
                                       List<Therapist> therapists,
-                                      List<Therapist> filteredTherapists) throws SQLException {
+                                      List<Therapist> therapistsFilteredByZipcode)
+          throws SQLException {
+
+    // a convenience list to refer to only one list later in the method
     List<Therapist> matches;
 
+    // get connection, prepare the statement, set parameters, and execute
     Connection connection = dbutil.getConnection();
     CallableStatement stmt = connection.prepareCall("{call get_user_id(?)}");
     stmt.setString(1, username);
     stmt.execute();
 
+    // get the result set
     ResultSet rs = stmt.getResultSet();
 
 
     rs.next();
     int userID = rs.getInt("user_id");
 
-    if (filteredTherapists.size() > 0) {
-      matches = filteredTherapists;
+    // set matches to be the proper list
+    // if filteredTherapists has at least 1 therapist in it
+    // we use that one, else we use therapists.
+    if (therapistsFilteredByZipcode.size() > 0) {
+      matches = therapistsFilteredByZipcode;
     } else {
       matches = therapists;
     }
@@ -314,9 +339,14 @@ public class API implements TherAppyAPI {
 
     for (int i = 0; i < 5; i++) {
       int index;
+      // get the correct Therapist from the matches list
       Therapist therapist = matches.get(i);
+
+      // get the index of that therapist in the list of zipcodes unfiltered by zipcode
+      // (because that aligns with the match scores and that's what we need)
       index = therapists.indexOf(therapist);
 
+      // call the stored procedure and insert the data
       String insert_sql = "call insert_matches(" + userID + ", " + therapist.getID() +
               ", " + matchScores.get(index) + ")";
       dbutil.insertOneRecord(insert_sql);
@@ -332,7 +362,6 @@ public class API implements TherAppyAPI {
    */
   private String getUserZipCode(String username) throws SQLException {
     Connection connection = dbutil.getConnection();
-
     CallableStatement stmt = connection.prepareCall("{call get_user_zipcode(?)}");
 
     stmt.setString(1, username);
@@ -369,6 +398,13 @@ public class API implements TherAppyAPI {
     return email;
   }
 
+  /**
+   * Get the max distance the user is willing to travel
+   *
+   * @param username the username of the user
+   * @return the max distance the user is willing to travel
+   * @throws SQLException if the query fails for any reason
+   */
   private String getUserDistance(String username) throws SQLException {
     Connection connection = dbutil.getConnection();
 

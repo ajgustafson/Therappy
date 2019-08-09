@@ -25,7 +25,13 @@ public class Therapist {
    * Gender of this therapist. F: female, M: male, N: non-binary.
    */
   private String gender;    // F, M, N
+  /**
+   * The email of this therapist
+   */
   private String email;
+  /**
+   * The phone number of this therapist
+   */
   private String phoneNumber;
   /**
    * Zip code for the location of this therapist's practice.
@@ -73,49 +79,22 @@ public class Therapist {
     this.qualification = qualification;
   }
 
-  //TODO get rid of the getters that we don't need?
+  /**
+   * Get the therapist ID
+   *
+   * @return the therapist's ID primary key
+   */
   public int getID() {
     return therapistID;
   }
 
-  public String getFirstName() {
-    return firstName;
-  }
-
-  public String getLastName() {
-    return lastName;
-  }
-
-  public Date getDOB() {
-    return dob;
-  }
-
-  public String getGender() {
-    return gender;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public String getPhoneNumber() {
-    return phoneNumber;
-  }
-
+  /**
+   * Get the therapist's zipcode
+   *
+   * @return the therapist's zipcode
+   */
   public String getZipCode() {
     return zipCode;
-  }
-
-  public float getCostPerSession() {
-    return costPerSession;
-  }
-
-  public String getStyle() {
-    return style;
-  }
-
-  public String getQualification() {
-    return qualification;
   }
 
   @Override
@@ -124,6 +103,8 @@ public class Therapist {
             + "Name: " + this.firstName + " " + this.lastName + "\n"
             + "Gender: " + this.gender + "\n"
             + "DOB: " + this.dob + "\n"
+            + "E-mail: " + this.email + "\n"
+            + "Phone Number: " + this.phoneNumber + "\n"
             + "Zip code: " + this.zipCode + "\n"
             + "Cost: " + this.costPerSession + "\n"
             + "}";

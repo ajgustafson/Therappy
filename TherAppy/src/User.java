@@ -111,69 +111,139 @@ public class User {
     this.prefStyle = prefStyle;
   }
 
-  public String getLastName() {
-    return lastName;
-  }
-
+  /**
+   * get first name
+   *
+   * @return first name
+   */
   public String getFirstName() {
     return firstName;
   }
 
+  /**
+   * get last name
+   *
+   * @return last name
+   */
+  public String getLastName() {
+    return lastName;
+  }
+
+  /**
+   * get username
+   *
+   * @return username
+   */
   public String getUsername() {
     return username;
   }
 
+  /**
+   * get the user's password
+   *
+   * @return the password
+   */
   public String getPassword() {
     return password;
   }
 
-  public String getEmail() {
-    return email;
-  }
-
-  public String getGender() {
-    return gender;
-  }
-
+  /**
+   * get the date of birth
+   *
+   * @return date of birth
+   */
   public String getDob() {
     return dob;
   }
 
+  /**
+   * get the user's gender
+   *
+   * @return the user's gender
+   */
+  public String getGender() {
+    return gender;
+  }
+
+  /**
+   * get the user's email
+   *
+   * @return the user's email
+   */
+  public String getEmail() {
+    return email;
+  }
+
+  /**
+   * get the user's zipcode
+   *
+   * @return the user's zipcode
+   */
   public String getZipCode() {
     return zipCode;
   }
 
+  /**
+   * Get the user's insurance
+   *
+   * @return the user's insurance
+   */
   public String getInsurance() {
     return insurance;
   }
 
+  /**
+   * Get the user's list of maladies
+   *
+   * @return a list of the user's maladies
+   */
   public List<String> getMaladies() {
     return maladies;
   }
 
+  /**
+   * Get the user's max distance
+   *
+   * @return the user's max distance
+   */
   public int getMaxDistance() {
     return maxDistance;
   }
 
+  /**
+   * Get the user's therapist gender preference
+   *
+   * @return the user's therapist gender preference
+   */
   public String getPrefGender() {
     return prefGender;
   }
 
+  /**
+   * get the user's max cost
+   *
+   * @return the user's max cost
+   */
   public int getMaxCost() {
     return maxCost;
   }
 
+  /**
+   * get the user's preferred qualification
+   *
+   * @return the user's preferred qualification
+   */
   public String getPrefQualification() {
     return prefQualification;
   }
 
+  /**
+   * get whether the user needs insurance
+   *
+   * @return 0 if the user doesn't and 1 otherwise
+   */
   public int getNeedsInsurance() {
     return needsInsurance;
-  }
-
-  //TODO can we delete this?
-  public int getPrefStyle() {
-    return prefStyle;
   }
 
   @Override

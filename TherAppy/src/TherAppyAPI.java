@@ -2,38 +2,36 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import JDBC_utils.DBUtils;
-
 /**
  * Application interface that describes methods available to interact with the TherAppy database.
  */
 public interface TherAppyAPI {
 
   /**
-   * When a user fills out all the information
-   * asked in the user-interface, this method inserts the majority of the entered information into
-   * the appropriate tables in the database.  The user's answers to the last 5 questions of our
-   * survey (related to style pref) are inserted via a separate method.
+   * When a user fills out all the information asked in the user-interface, this method inserts the
+   * majority of the entered information into the appropriate tables in the database.  The user's
+   * answers to the last 5 questions of our survey (related to style pref) are inserted via a
+   * separate method.
    *
    * @param user User to insert
    **/
   void insertUser(User user);
 
   /**
-   * This method inserts a user's responses to one of the 5 questions related to
-   * style pref into the database.
+   * This method inserts a user's responses to one of the 5 questions related to style pref into the
+   * database.
+   *
    * @param user     User that responded to the question
    * @param choiceID ID of the choice to which this response correlates
    */
   void insertStylePrefResponse(User user, int choiceID);
 
   /**
-   * This method populates (via a call to a
-   * stored procedure) the user's style preference in the DB. This method should be called after the
-   * user's responses to the 5 questions related to style pref have been inserted into the DB
+   * This method populates (via a call to a stored procedure) the user's style preference in the DB.
+   * This method should be called after the user's responses to the 5 questions related to style
+   * pref have been inserted into the DB
    *
-   * @param user User to update style pref for TODO -  add exception handling in case this method is
-   *             called when all the needed data isn't present
+   * @param user User to update style pref for
    */
   void updateUserStyle(User user);
 
@@ -50,7 +48,7 @@ public interface TherAppyAPI {
    * Get a filtered list of therapists by given user's zip-code
    *
    * @param username user to filter based on their zip-code
-   * @param insert a boolean to choose whether to insert into the matches table
+   * @param insert   a boolean to choose whether to insert into the matches table
    * @return a list of therapists within the user's radius of 5 miles
    */
   List<Therapist> getMatches(String username, boolean insert) throws IOException, SQLException;
