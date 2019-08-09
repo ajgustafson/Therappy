@@ -337,7 +337,8 @@ begin
         left join similar_users using (user_id)
         group by ts.therapist_id
 		having match_score > 0
-		order by match_score DESC;
+		order by match_score DESC
+        limit 5;
     
     drop temporary table if exists similar_users;
     drop temporary table if exists therapist_scores;
@@ -470,6 +471,8 @@ begin
 end //
 delimiter ;
 
+drop procedure if exists insert_matches;
+
 delimiter //
 create procedure insert_matches
 (
@@ -479,22 +482,11 @@ create procedure insert_matches
 )
 begin
     
-    if (user_id_param not in (select user_id from user_matches_therapist)) then
-		INSERT INTO user_matches_therapist
-		VALUES (user_id_param, therapist_id_param, strength);
-	end if;
+	INSERT INTO user_matches_therapist
+	VALUES (user_id_param, therapist_id_param, score_param);
         
 end //
 delimiter ;
-
-
-
-select *
-from user_matches_therapist;
-
-
-
-
 
 -- ------------------ TESTS ------------------
 

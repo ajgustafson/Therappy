@@ -77,6 +77,7 @@ public class Therapist {
   public int getID() {
     return therapistID;
   }
+
   public String getFirstName() {
     return firstName;
   }
@@ -129,5 +130,16 @@ public class Therapist {
             + "Style: " + this.style + "\n"
             + "Degree: " + this.qualification + "\n"
             + "}";
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    } else if (!(o instanceof Therapist)) {
+      return false;
+    }
+    Therapist other = (Therapist) o;
+    return this.therapistID == other.therapistID;
   }
 }

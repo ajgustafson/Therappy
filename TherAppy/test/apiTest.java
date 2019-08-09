@@ -21,9 +21,9 @@ public class apiTest {
   public void testFilterTherapists() {
     try {
       List<Therapist> therapists = api.getMatches("gwickman8");
-      for (Therapist therapist : therapists) {
-        System.out.println(therapist);
-      }
+//      for (Therapist therapist : therapists) {
+//        System.out.println(therapist);
+//      }
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }

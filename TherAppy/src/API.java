@@ -228,6 +228,10 @@ public class API implements TherAppyAPI {
       zips.add(Integer.parseInt(line.split(",")[0]));
     }
 
+    for (int zip : zips) {
+      System.out.println("zipcode: " + zip);
+    }
+
     Connection connection = dbutil.getConnection();
     CallableStatement stmt = connection.prepareCall("{call findMatchingTherapists(?)}");
 
@@ -266,6 +270,8 @@ public class API implements TherAppyAPI {
   private void insertTherapistMatches(String username, List<Integer> matchScores,
                                       List<Therapist> therapists,
                                       List<Therapist> filteredTherapists) throws SQLException {
+    List<Therapist> matches;
+
     Connection connection = dbutil.getConnection();
     CallableStatement stmt = connection.prepareCall("{call get_user_id(?)}");
     stmt.setString(1, username);
@@ -278,16 +284,34 @@ public class API implements TherAppyAPI {
     int userID = rs.getInt("user_id");
 
     if (filteredTherapists.size() > 0) {
-      therapists = filteredTherapists;
+      matches = filteredTherapists;
+    } else {
+      matches = therapists;
     }
 
-    for (int i = 0; i < 5; i++) {
-      stmt = connection.prepareCall("{call insert_matches(?,?,?)}");
-      stmt.setString(2, "" + therapists.get(i).getID());
-      stmt.setString(1, "" + userID);
-      stmt.setString(3, "" + matchScores.get(i));
+    System.out.println(matches.size());
 
-      stmt.execute();
+    for (int match_score : matchScores) {
+      System.out.println(match_score);
+    }
+
+
+    for (int i = 0; i < 5; i++) {
+      int index;
+      Therapist therapist = matches.get(i);
+      index = therapists.indexOf(therapist);
+      
+//      Connection con = dbutil.getConnection();
+//      CallableStatement stmt2 = con.prepareCall("{call insert_matches(?,?,?)}");
+//      stmt2.setString(1, "" + userID);
+//      stmt2.setString(2, "" + therapist.getID());
+//      stmt2.setString(3, "" + matchScores.get(index));
+
+      // stmt2.execute();
+
+      String insert_sql = "call insert_matches(" + userID + ", " + therapist.getID() +
+              ", " + matchScores.get(index) + ")";
+      dbutil.insertOneRecord(insert_sql);
     }
   }
 
