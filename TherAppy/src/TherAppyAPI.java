@@ -48,9 +48,10 @@ public interface TherAppyAPI {
    * Get a filtered list of therapists by given user's zip-code
    *
    * @param username user to filter based on their zip-code
+   * @param insert a boolean to choose whether to insert into the matches table
    * @return a list of therapists within the user's radius of 5 miles
    */
-  List<Therapist> getMatches(String username) throws IOException, SQLException;
+  List<Therapist> getMatches(String username, boolean insert) throws IOException, SQLException;
 
 
   /**

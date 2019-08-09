@@ -53,8 +53,6 @@ public class DBUtils {
       Connection con = getConnection();
       Statement stmt = con.createStatement();
 
-
-
       stmt.executeUpdate(insertSQL, Statement.RETURN_GENERATED_KEYS);
 
       // extract auto-incremented ID

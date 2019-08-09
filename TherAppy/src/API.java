@@ -201,7 +201,7 @@ public class API implements TherAppyAPI {
    * @throws IOException  //TODO when does it throw this?
    * @throws SQLException if an error occurs when interacting with the database
    */
-  public List<Therapist> getMatches(String username) throws IOException, SQLException {
+  public List<Therapist> getMatches(String username, boolean insert) throws IOException, SQLException {
 
     List<Therapist> therapists = new LinkedList<>();
     List<Therapist> filteredTherapists = new ArrayList<>();
@@ -228,10 +228,6 @@ public class API implements TherAppyAPI {
       zips.add(Integer.parseInt(line.split(",")[0]));
     }
 
-    for (int zip : zips) {
-      System.out.println("zipcode: " + zip);
-    }
-
     Connection connection = dbutil.getConnection();
     CallableStatement stmt = connection.prepareCall("{call findMatchingTherapists(?)}");
 
@@ -241,7 +237,6 @@ public class API implements TherAppyAPI {
     ResultSet rs = stmt.getResultSet();
 
     List<Integer> matchScores = new ArrayList<>();
-
 
     while (rs.next() != false) {
       therapists.add(new Therapist(rs.getInt("therapist_id"),
@@ -260,7 +255,9 @@ public class API implements TherAppyAPI {
       }
     }
 
-    insertTherapistMatches(username, matchScores, therapists, filteredTherapists);
+    if (insert) {
+      insertTherapistMatches(username, matchScores, therapists, filteredTherapists);
+    }
 
     //TODO close connection?
 

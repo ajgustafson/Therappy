@@ -1,3 +1,7 @@
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +30,35 @@ import JDBC_utils.DBUtils;
  * information from the user and display information to the user.
  */
 public class UI {
-  DBUtils db = new DBUtils("jdbc:mysql://localhost:3306/Therappy?serverTimezone=EST5EDT",
-          "root", "openforehand45");
-  API api = new API(db);
-  String username = null;
-  Scanner scan = new Scanner(System.in);
+  private DBUtils db;
+  private API api;
+  private String username = null;
+  private Scanner scan = new Scanner(System.in);
 
+  /**
+   * Constructor for the UI class. Setups the connection to the MySQL DB.
+   */
+  public UI() {
+
+    String dbUsername = "";
+    String dbPassword = "";
+
+    try {
+      InputStream in1 = new FileInputStream("file1.txt");
+      Scanner s = new Scanner(in1);
+      dbUsername= s.nextLine();
+      InputStream in2 = new FileInputStream("file2.txt");
+      s = new Scanner(in2);
+      dbPassword= s.nextLine();
+    } catch (FileNotFoundException e) {
+      System.out.print(e.getMessage());
+    }
+
+    this.db = new DBUtils("jdbc:mysql://localhost:3306/Therappy?serverTimezone=EST5EDT",
+            dbUsername, dbPassword);
+
+    this.api = new API(db);
+  }
   /**
    * Sets the user of this session as a new or returning user.
    */
@@ -151,6 +178,13 @@ public class UI {
 
     getStylePreference(newUser);
     api.updateUserStyle(newUser);
+
+    try {
+      api.getMatches(username, true);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
+
 
     System.out.println("Great!  We have created your TherAppy account!\n");
 
@@ -392,7 +426,7 @@ public class UI {
     List<Therapist> matches = null;
     System.out.println("Here are your top matches: ");
     try {
-      matches = api.getMatches(this.username);
+      matches = api.getMatches(this.username, false);
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }

@@ -20,7 +20,7 @@ public class apiTest {
   @Test
   public void testFilterTherapists() {
     try {
-      List<Therapist> therapists = api.getMatches("gwickman8");
+      List<Therapist> therapists = api.getMatches("gwickman8", false);
 //      for (Therapist therapist : therapists) {
 //        System.out.println(therapist);
 //      }
